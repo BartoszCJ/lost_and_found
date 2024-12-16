@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model item_history {
+  id           Int       @id @default(autoincrement())
+  item_id      Int
+  action       String    @db.VarChar(20)
+  date         DateTime? @default(now()) @db.Timestamp(6)
+  performed_by Int?
+  items        items     @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users        users?    @relation(fields: [performed_by], references: [id], onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model items {
+  id               Int                @id @default(autoincrement())
+  name             String             @db.VarChar(100)
+  description      String?
+  category         String             @db.VarChar(50)
+  location_found   String?            @db.VarChar(150)
+  date_found       DateTime?          @db.Date
+  status           String             @db.VarChar(20)
+  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  item_history     item_history[]
+  lost_reports     lost_reports[]
+  ownership_claims ownership_claims[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model lost_reports {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  item_id       Int?
+  date_reported DateTime? @default(now()) @db.Timestamp(6)
+  status        String    @db.VarChar(20)
+  items         items?    @relation(fields: [item_id], references: [id], onUpdate: NoAction)
+  users         users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ownership_claims {
+  id                                        Int       @id @default(autoincrement())
+  item_id                                   Int
+  user_id                                   Int
+  description                               String
+  status                                    String    @db.VarChar(20)
+  date_submitted                            DateTime? @default(now()) @db.Timestamp(6)
+  verified_by                               Int?
+  items                                     items     @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_ownership_claims_user_idTousers     users     @relation("ownership_claims_user_idTousers", fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_ownership_claims_verified_byTousers users?    @relation("ownership_claims_verified_byTousers", fields: [verified_by], references: [id], onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  id                                                   Int                @id @default(autoincrement())
+  name                                                 String             @db.VarChar(100)
+  email                                                String             @unique @db.VarChar(150)
+  password                                             String             @db.VarChar(255)
+  role                                                 String             @db.VarChar(20)
+  created_at                                           DateTime?          @default(now()) @db.Timestamp(6)
+  item_history                                         item_history[]
+  lost_reports                                         lost_reports[]
+  ownership_claims_ownership_claims_user_idTousers     ownership_claims[] @relation("ownership_claims_user_idTousers")
+  ownership_claims_ownership_claims_verified_byTousers ownership_claims[] @relation("ownership_claims_verified_byTousers")
+}

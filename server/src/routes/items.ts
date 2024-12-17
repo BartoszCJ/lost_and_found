@@ -1,9 +1,11 @@
-import { Router } from 'express';
-import { getItems, addItem } from '../controllers/items';
+import { Router } from "express";
+import { getItems, addItem } from "../controllers/items";
+import { authenticateJWT } from "../auth/auth";
 
 const router: Router = Router();
 
-router.get('/', getItems);
-router.post('/', addItem);
+// Zabezpieczone trasy
+router.get("/", authenticateJWT, getItems); // Tylko zalogowani użytkownicy
+router.post("/", authenticateJWT, addItem);
 
 export default router;

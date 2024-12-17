@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import { getUsers, addUser } from '../controllers/users';
+import { getUsers, addUser, loginUser, registerUser } from '../controllers/users';
 
 const router: Router = Router();
 
-// Pobranie wszystkich użytkowników
-router.get('/', getUsers);
 
-// Dodanie nowego użytkownika
+router.post('/register', registerUser); // Rejestracja nowego użytkownika
+
+router.post('/login', loginUser);
+router.get('/', getUsers);
 router.post('/', addUser);
 
 export default router;

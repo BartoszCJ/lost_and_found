@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 interface InputFieldProps {
   label?: string; // Etykieta nad polem
@@ -9,7 +10,7 @@ interface InputFieldProps {
   containerStyle?: string; // Dodatkowe style dla kontenera
   inputStyle?: string; // Dodatkowe style dla inputa
   iconStyle?: string; // Dodatkowe style dla ikony
-  [key: string]: any; // Dodatkowe właściwości dla <input>
+  [key: string]: unknown; // Dodatkowe właściwości dla <input>
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -38,7 +39,7 @@ const InputField: React.FC<InputFieldProps> = ({
       >
         {/* Ikona po lewej stronie */}
         {iconLeft && (
-          <img
+          <Image
             src={iconLeft}
             alt="icon-left"
             className={`w-6 h-6 mr-2 ${iconStyle}`}
@@ -54,7 +55,7 @@ const InputField: React.FC<InputFieldProps> = ({
 
         {/* Ikona po prawej stronie */}
         {iconRight && (
-          <img
+          <Image
             src={iconRight}
             alt="icon-right"
             className={`w-6 h-6 ml-2 ${iconStyle}`}

@@ -47,7 +47,7 @@ export interface InputFieldProps {
   containerStyle?: string;
   inputStyle?: string;
   iconStyle?: string;
-  [key: string]: any; // Dodatkowe właściwości
+  [key: string]: unknown; // Dodatkowe właściwości
 }
 
 export interface ButtonProps {
@@ -58,5 +58,5 @@ export interface ButtonProps {
   IconLeft?: React.ComponentType<React.SVGProps<SVGSVGElement>>; // Obsługa `className`
   IconRight?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   className?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }

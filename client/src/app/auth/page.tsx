@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import LoginUser from "../components/Login"; // Komponent logowania
-import Register from "../components/Register"; // Komponent rejestracji
+import LoginUser from "../components/Login";
+import Register from "../components/Register";
 
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true); // Stan: logowanie vs rejestracja
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      {/* Stała lewa część ekranu */}
+      {/* Lewa część ekranu */}
       <div className="w-1/2 bg-white p-8 shadow-lg rounded-l-lg flex flex-col items-center justify-center">
         {isLogin ? (
           <>
@@ -27,7 +27,7 @@ const AuthPage = () => {
         )}
       </div>
 
-      {/* Stała prawa część ekranu */}
+      {/* Prawa część ekranu */}
       <div className="w-1/2 bg-white p-8 shadow-lg rounded-r-lg flex flex-col items-center justify-center">
         {!isLogin ? (
           <>

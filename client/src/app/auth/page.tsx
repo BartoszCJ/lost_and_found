@@ -8,30 +8,42 @@ const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-between min-h-screen bg-gray-100">
       {/* Lewa część ekranu */}
-      <div className="w-1/2 bg-white p-8 shadow-lg rounded-l-lg flex flex-col items-center justify-center">
-        {isLogin ? (
-          <>
-            <h1 className="text-2xl font-bold text-center mb-6">Logowanie</h1>
-            <LoginUser />
-            <button
-              onClick={() => setIsLogin(false)}
-              className="mt-6 text-blue-500 hover:underline"
-            >
-              Nie masz konta? Zarejestruj się
-            </button>
-          </>
-        ) : (
-          <h1 className="text-2xl font-bold text-center mb-6">Witaj ponownie!</h1>
-        )}
+      <div
+        className={`w-1/2 h-screen p-8 shadow-2xl rounded-l-lg flex flex-col items-center justify-start transition-all duration-300 ${
+          isLogin ? "bg-white" : "bg-gray-300 bg-opacity-50"
+        }`}
+      >
+
+          {isLogin && (
+            <>
+              <h1 className="text-2xl font-bold text-center mb-6 mt-20">
+                Logowanie
+              </h1>
+              <LoginUser />
+              <button
+                onClick={() => setIsLogin(false)}
+                className="mt-6 text-blue-500 hover:underline"
+              >
+                Nie masz konta? Zarejestruj się
+              </button>
+            </>
+          )}
+
       </div>
 
       {/* Prawa część ekranu */}
-      <div className="w-1/2 bg-white p-8 shadow-lg rounded-r-lg flex flex-col items-center justify-center">
-        {!isLogin ? (
+      <div
+        className={`w-1/2 h-screen p-8  shadow-2xl rounded-r-lg flex flex-col items-center justify-start transition-all duration-300 ${
+          !isLogin ? "bg-white" : "bg-gray-300 bg-opacity-50"
+        }`}
+      >
+        {!isLogin && (
           <>
-            <h1 className="text-2xl font-bold text-center mb-6">Rejestracja</h1>
+            <h1 className="text-2xl font-bold text-center mb-6 mt-20 ">
+              Rejestracja
+            </h1>
             <Register />
             <button
               onClick={() => setIsLogin(true)}
@@ -40,8 +52,6 @@ const AuthPage = () => {
               Masz już konto? Zaloguj się
             </button>
           </>
-        ) : (
-          <h1 className="text-2xl font-bold text-center mb-6">Zaloguj się!</h1>
         )}
       </div>
     </div>

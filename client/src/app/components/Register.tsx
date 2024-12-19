@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import InputField from "../components/InputField";
+import CustomButton from "../components/CustomButton";
 
 const Register = () => {
   const [name, setUsername] = useState("");
@@ -6,10 +8,13 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess(false);
+    setLoading(true);
 
     try {
       const response = await fetch("http://localhost:3001/api/users/register", {
@@ -24,47 +29,66 @@ const Register = () => {
       }
 
       setSuccess(true);
-      alert("Rejestracja udana! Możesz się teraz zalogować.");
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
         setError("An unexpected error occurred.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="text"
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-7 bg-white p-8 rounded-lg w-full max-w-md mx-auto"
+    >
+      {error && <p className="text-red-500 text-center">{error}</p>}
+      {success && (
+        <p className="text-green-500 text-center">
+          Rejestracja zakończona sukcesem!
+        </p>
+      )}
+      <InputField
+        label="Nazwa użytkownika"
+        icon="/assets/icons/person.png"
         value={name}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Nazwa użytkownika"
-        className="w-full px-4 py-2 border rounded"
-        required
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setUsername(e.target.value)
+        }
+        placeholder="Wpisz nazwę użytkownika"
       />
-      <input
-        type="email"
+      <InputField
+        label="Email"
+        icon="/assets/icons/email.png"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        className="w-full px-4 py-2 border rounded"
-        required
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setEmail(e.target.value)
+        }
+        placeholder="Wpisz swój email"
       />
-      <input
-        type="password"
+      <InputField
+        label="Hasło"
+        icon="/assets/icons/lock.png"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Hasło"
-        className="w-full px-4 py-2 border rounded"
-        required
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setPassword(e.target.value)
+        }
+        placeholder="Wpisz swoje hasło"
+        secureTextEntry
       />
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">Rejestracja zakończona sukcesem!</p>}
-      <button type="submit" className="w-full bg-green-500 text-white py-2 rounded">
-        Zarejestruj się
-      </button>
+      <div className="p-4">
+        <CustomButton
+          onClick={handleSubmit}
+          title={loading ? "Rejestracja..." : "Zarejestruj się"}
+          bgVariant={loading ? "secondary" : "success"}
+          textVariant="default"
+          className={`${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+          disabled={loading}
+        />
+      </div>
     </form>
   );
 };

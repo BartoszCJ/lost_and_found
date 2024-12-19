@@ -14,6 +14,7 @@ if (!JWT_SECRET) {
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { name, email, password, role } = req.body;
+        console.log("Received data:", { name, email, password });
 
         // Sprawdzenie, czy użytkownik już istnieje
         const existingUser = await prisma.users.findUnique({ where: { email } });

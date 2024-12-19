@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-
+import InputField from "../components/InputField";
+import CustomButton from "../components/CustomButton";
 
 interface TokenPayload {
   id: number;
@@ -17,12 +18,14 @@ const LoginUser = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const response = await fetch("http://localhost:3001/api/users/login", {
@@ -37,6 +40,7 @@ const LoginUser = () => {
       }
 
       const { token } = await response.json();
+
       // Zapisz token w localStorage
       localStorage.setItem("token", token);
 
@@ -44,44 +48,56 @@ const LoginUser = () => {
       const decoded = jwtDecode<TokenPayload>(token);
       localStorage.setItem("role", decoded.role);
 
-      // Przekieruj użytkownika np. do dashboard     
-
+      // Przekieruj użytkownika np. do dashboard
       router.push("/");
-
-
-
-    }catch (err) {
+    } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
         setError("An unexpected error occurred.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto mt-10">
-      <h2 className="text-xl font-semibold mb-4">Zaloguj się</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-7 bg-white p-8 rounded-lg w-full max-w-md mx-auto pr"
+    >
       {error && <p className="text-red-500">{error}</p>}
-      <input
-        type="email"
+      <InputField
+        label="Email"
+        icon="/assets/icons/email.png"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        className="w-full px-4 py-2 border rounded focus:outline-none focus:ring"
-        required
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setEmail(e.target.value)
+        }
+        placeholder="Wpisz swój email"
+        containerStyle="mb-4"
       />
-      <input
-        type="password"
+      <InputField
+        label="Hasło"
+        icon="/assets/icons/lock.png"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Hasło"
-        className="w-full px-4 py-2 border rounded focus:outline-none focus:ring"
-        required
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setPassword(e.target.value)
+        }
+        placeholder="Wpisz swoje hasło"
+        secureTextEntry
+        containerStyle="mb-4"
       />
-      <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-colors">
-        Zaloguj
-      </button>
+      <div className="pr-5 pl-5 pt-5">
+        <CustomButton
+          onClick={handleSubmit}
+          title={loading ? "Logowanie..." : "Zaloguj"}
+          bgVariant={loading ? "secondary" : "success"}
+          textVariant="default"
+          className={`${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+          disabled={loading}
+        />
+      </div>
     </form>
   );
 };

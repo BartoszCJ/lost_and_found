@@ -1,67 +1,57 @@
 import React from "react";
-import Image from "next/image";
 
 interface InputFieldProps {
-  label?: string; // Etykieta nad polem
-  labelStyle?: string; // Dodatkowe style dla etykiety
-  iconLeft?: string; // Ścieżka do ikony po lewej stronie
-  iconRight?: string; // Ścieżka do ikony po prawej stronie
-  secureTextEntry?: boolean; // Czy pole jest hasłem
-  containerStyle?: string; // Dodatkowe style dla kontenera
-  inputStyle?: string; // Dodatkowe style dla inputa
-  iconStyle?: string; // Dodatkowe style dla ikony
-  [key: string]: unknown; // Dodatkowe właściwości dla <input>
+  label?: string;
+  labelStyle?: string;
+  icon?: string;
+  secureTextEntry?: boolean;
+  containerStyle?: string;
+  inputStyle?: string;
+  iconStyle?: string;
+  error?: string;
+  [key: string]: any;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
   label,
   labelStyle = "",
-  iconLeft,
-  iconRight,
+  icon,
   secureTextEntry = false,
   containerStyle = "",
   inputStyle = "",
   iconStyle = "",
+  error = "",
   ...props
 }) => {
   return (
-    <div className="my-2 w-full">
-      {/* Etykieta */}
+    <div className="w-full my-2">
       {label && (
-        <label className={`text-lg font-semibold mb-3 block ${labelStyle}`}>
+        <label
+          className={`block text-lg font-semibold mb-2 ${labelStyle}`}
+          htmlFor={props.id || props.name}
+        >
           {label}
         </label>
       )}
-
-      {/* Kontener z ikoną i polem */}
       <div
-        className={`flex items-center bg-neutral-100 rounded-full border border-neutral-200 px-4 ${containerStyle}`}
+        className={`flex items-center bg-neutral-100 rounded-full border border-neutral-200 px-4 focus-within:ring-2 focus-within:ring-green-600 ${containerStyle}`}
       >
-        {/* Ikona po lewej stronie */}
-        {iconLeft && (
-          <Image
-            src={iconLeft}
-            alt="icon-left"
-            className={`w-6 h-6 mr-2 ${iconStyle}`}
+        {icon && (
+          <img
+            src={icon}
+            alt="icon"
+            className={`w-6 h-6 mr-4 ${iconStyle}`}
           />
         )}
-
-        {/* Pole tekstowe */}
         <input
+          id={props.id || props.name}
           type={secureTextEntry ? "password" : "text"}
-          className={`flex-1 h-12 text-base font-medium text-left text-neutral-900 bg-transparent border-none focus:outline-none focus:ring-0 ${inputStyle}`}
+          className={`flex-1 h-12 text-base font-medium text-neutral-900 bg-transparent outline-none ${inputStyle}`}
+          aria-invalid={!!error}
           {...props}
         />
-
-        {/* Ikona po prawej stronie */}
-        {iconRight && (
-          <Image
-            src={iconRight}
-            alt="icon-right"
-            className={`w-6 h-6 ml-2 ${iconStyle}`}
-          />
-        )}
       </div>
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

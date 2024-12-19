@@ -46,14 +46,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Linki nawigacyjne */}
         <div className="hidden md:flex space-x-4">
-          <Link
-            href="/items"
-            className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
-          >
-            Przedmioty
-          </Link>
           <Link
             href="/reports"
             className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
@@ -73,13 +66,30 @@ const Navbar = () => {
             Raporty
           </Link>
 
-          {/* Warunkowo wyświetlana zakładka "Twoje zgłoszenia" dla zalogowanych */}
           {isLoggedIn && (
+            <>
+              <Link
+                href="/items"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Przedmioty
+              </Link>
+              <Link
+                href="/my-submissions"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Twoje zgłoszenia
+              </Link>
+            </>
+          )}
+
+          {/* Warunkowo wyświetlany panel zarządzania dla roli "admin" */}
+          {isLoggedIn && userRole === "admin" && (
             <Link
-              href="/my-submissions"
+              href="/admin-panel"
               className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
             >
-              Twoje zgłoszenia
+              Panel Zarządzania
             </Link>
           )}
 

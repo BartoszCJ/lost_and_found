@@ -1,19 +1,18 @@
 import React from "react";
 import { ButtonProps } from "../types/type";
 
-
 const getBgVariantStyle = (variant: ButtonProps["bgVariant"]) => {
   switch (variant) {
     case "secondary":
-      return "bg-gray-500";
+      return "bg-gray-500 hover:bg-gray-600";
     case "danger":
-      return "bg-red-500";
+      return "bg-red-500 hover:bg-red-600";
     case "success":
-      return "bg-green-500";
+      return "bg-green-500 hover:bg-green-600";
     case "outline":
-      return "bg-transparent border border-neutral-300";
+      return "bg-transparent border border-neutral-300 hover:border-neutral-400";
     default:
-      return "bg-[#33b249]"; // Domyślny kolor
+      return "bg-[#33b249] hover:bg-green-600"; // Domyślny kolor z efektem hover
   }
 };
 
@@ -44,7 +43,7 @@ const CustomButton: React.FC<ButtonProps> = ({
 }) => (
   <button
     onClick={onClick}
-    className={`w-full rounded-full p-5 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 ${getBgVariantStyle(
+    className={`w-full rounded-full p-5 flex flex-row justify-center items-center shadow-xl hover:shadow-lg  shadow-neutral-400/70 transition-all duration-300 ${getBgVariantStyle(
       bgVariant
     )} ${className}`}
     {...props}

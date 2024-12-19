@@ -13,6 +13,7 @@ export interface Item {
   status: "unconfirmed" | "found" | "claimed";
   dateFound: string;
 }
+
 export interface LostReport {
   id: number;
   userId: number;
@@ -51,12 +52,12 @@ export interface InputFieldProps {
 }
 
 export interface ButtonProps {
-  onClick: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => void;
   title: string;
   bgVariant?: "primary" | "secondary" | "danger" | "success" | "outline";
-  textVariant?: "primary" | "secondary" | "danger" | "success" | "default";
-  IconLeft?: React.ComponentType<React.SVGProps<SVGSVGElement>>; // Obsługa `className`
-  IconRight?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  textVariant?: "default" | "primary" | "secondary" | "danger" | "success";
+  IconLeft?: React.FC<React.SVGProps<SVGSVGElement>>;
+  IconRight?: React.FC<React.SVGProps<SVGSVGElement>>;
   className?: string;
   [key: string]: unknown;
 }

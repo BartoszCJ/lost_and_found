@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
 declare global {
   namespace Express {
     interface Request {
@@ -11,33 +12,41 @@ declare global {
     }
   }
 }
-const JWT_SECRET = process.env.JWT_SECRET;
 
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET is not defined in the environment variables.");
-}
+const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
 export const authenticateJWT = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res
-      .status(401)
-      .json({ error: "Authorization token missing or invalid." });
+    res.status(401).json({ error: "Authorization token missing or invalid." });
+    return;
   }
 
   const token = authHeader.split(" ")[1];
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(403).json({ error: "Invalid or expired token." });
+      res.status(403).json({ error: "Invalid or expired token." });
+      return;
     }
 
-    req.user = user as { id: number; email: string; role: string }; // Typowanie usera
+    const user = decoded as JwtPayload & {
+      id: number;
+      email: string;
+      role: string;
+    };
+
+    req.user = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+
     next();
   });
 };

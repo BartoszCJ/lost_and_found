@@ -5,51 +5,41 @@ import prisma from "../prisma";
 export const createOwnershipClaim = async (
   req: Request,
   res: Response
-): Promise<Response> => {
+): Promise<void> => {
   try {
-    const { item_id, description } = req.body; // Dane z frontendu
-    const user_id = (req as any).user.id; // ID użytkownika z tokenu JWT
+    const userId = (req as any).user.id; // ID użytkownika z JWT
+    const { item_id, description } = req.body;
 
-    // Walidacja danych wejściowych
     if (!item_id || !description) {
-      return res
-        .status(400)
-        .json({ error: "item_id and description are required." });
+      res.status(400).json({ error: "item_id and description are required." });
+      return;
     }
 
-    // Sprawdzenie, czy użytkownik już złożył zgłoszenie do tego przedmiotu
     const existingClaim = await prisma.ownership_claims.findFirst({
-      where: {
-        item_id,
-        user_id,
-      },
+      where: { item_id, user_id: userId },
     });
 
-    //    if (existingClaim) {
-    //    return res
-    //    .status(400)
-    //  .json({ error: "You have already submitted a claim for this item." });
-    //}
+//    if (existingClaim) {
+ //     res
+   //     .status(400)
+   //     .json({ error: "You have already submitted a claim for this item." });
+  //    return;
+  //  }
 
-    // Tworzenie zgłoszenia
     const newClaim = await prisma.ownership_claims.create({
       data: {
+        user_id: userId,
+        item_id,
         description,
         status: "pending",
         date_submitted: new Date(),
-        item: {
-          connect: { id: item_id },
-        },
-        user: {
-          connect: { id: user_id },
-        },
       },
     });
 
-    return res.status(201).json(newClaim);
+    res.status(201).json(newClaim);
   } catch (error) {
     console.error("Error creating ownership claim:", error);
-    return res.status(500).json({ error: "Unable to create ownership claim." });
+    res.status(500).json({ error: "Unable to create ownership claim." });
   }
 };
 
@@ -91,5 +81,27 @@ export const updateOwnershipClaim = async (
     res.json(updatedClaim);
   } catch (error) {
     res.status(500).json({ error: "Error updating ownership claim" });
+  }
+};
+
+export const getUserOwnershipClaims = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = (req as any).user.id; // ID użytkownika z JWT
+
+    // Pobierz zgłoszenia roszczeniowe dla tego użytkownika
+    const claims = await prisma.ownership_claims.findMany({
+      where: { user_id: userId },
+      include: {
+        item: true, // Pobierz szczegóły przedmiotu
+      },
+    });
+
+    res.status(200).json(claims);
+  } catch (error) {
+    console.error("Error fetching user's ownership claims:", error);
+    res.status(500).json({ error: "Unable to fetch ownership claims." });
   }
 };

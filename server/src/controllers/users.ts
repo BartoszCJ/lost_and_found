@@ -32,7 +32,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
                 name,
                 email,
                 password: hashedPassword,
-                role: role || 'user', // Domyślna rola to 'user'
+                role: 'user', // Domyślna rola to 'user'
             },
         });
 

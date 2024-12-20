@@ -37,15 +37,20 @@ model items {
 
 /// Zgłoszenia zgubionych przedmiotów
 model lost_reports {
-  id            Int       @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   user_id       Int
+  user          users    @relation(fields: [user_id], references: [id])
   item_id       Int?
-  date_reported DateTime? @default(now()) @db.Timestamp(6)
-  status        String    @db.VarChar(20)
-
-  item          items?    @relation(fields: [item_id], references: [id])
-  user          users     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  item          items?   @relation(fields: [item_id], references: [id])
+  name          String   @default("") // Domyślna wartość
+  description   String   @default("") // Domyślna wartość
+  location_found String  @default("") // Domyślna wartość
+  date_found    DateTime @default(now()) // Domyślna wartość
+  status        String   // "pending", "resolved", "rejected"
+  date_reported DateTime @default(now())
 }
+
+
 
 /// Zgłoszenia własności przedmiotów
 model ownership_claims {

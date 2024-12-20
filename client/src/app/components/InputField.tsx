@@ -9,6 +9,7 @@ interface InputFieldProps {
   inputStyle?: string;
   iconStyle?: string;
   error?: string;
+  showpasswordstrength?: boolean; // Opcjonalnie, jeśli chcemy wyświetlać siłę hasła
   [key: string]: any;
 }
 
@@ -21,8 +22,35 @@ const InputField: React.FC<InputFieldProps> = ({
   inputStyle = "",
   iconStyle = "",
   error = "",
+  showpasswordstrength = false,
   ...props
 }) => {
+  // Funkcja do obliczania siły hasła
+  const calculatePasswordStrength = (password: string): string => {
+    if (password.length < 6) return "Słabe";
+    if (password.match(/[A-Z]/) && password.match(/\d/) && password.length >= 8)
+      return "Silne";
+    return "Średnie";
+  };
+
+  // Wyliczamy siłę hasła tylko, jeśli jest to pole hasła i ustawiono `showpasswordstrength
+  // `
+  const passwordStrength =
+    secureTextEntry && showpasswordstrength && props.value
+      ? calculatePasswordStrength(props.value)
+      : "";
+
+  // Dynamiczne klasy CSS dla obramowania
+  const borderClass = error
+    ? "border-red-500"
+    : secureTextEntry && showpasswordstrength && props.value
+    ? passwordStrength === "Słabe"
+      ? "border-red-500"
+      : passwordStrength === "Silne"
+      ? "border-green-500"
+      : "border-yellow-500"
+    : "border-neutral-200";
+
   return (
     <div className="w-full my-2">
       {label && (
@@ -34,14 +62,10 @@ const InputField: React.FC<InputFieldProps> = ({
         </label>
       )}
       <div
-        className={`flex items-center bg-neutral-100 rounded-full border border-neutral-200 px-4 focus-within:ring-2 focus-within:ring-green-600 ${containerStyle}`}
+        className={`flex items-center bg-neutral-100 rounded-full border px-4 focus-within:ring-1 focus-within:ring-green-600 ${borderClass} ${containerStyle}`}
       >
         {icon && (
-          <img
-            src={icon}
-            alt="icon"
-            className={`w-6 h-6 mr-4 ${iconStyle}`}
-          />
+          <img src={icon} alt="icon" className={`w-6 h-6 mr-4 ${iconStyle}`} />
         )}
         <input
           id={props.id || props.name}
@@ -52,6 +76,20 @@ const InputField: React.FC<InputFieldProps> = ({
         />
       </div>
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {/* Wskaźnik siły hasła */}
+      {secureTextEntry && showpasswordstrength && props.value && (
+        <p
+          className={`text-sm mt-1 ${
+            passwordStrength === "Silne"
+              ? "text-green-500"
+              : passwordStrength === "Słabe"
+              ? "text-red-500"
+              : "text-yellow-500"
+          }`}
+        >
+          Siła hasła: {passwordStrength}
+        </p>
+      )}
     </div>
   );
 };

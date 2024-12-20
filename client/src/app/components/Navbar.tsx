@@ -1,31 +1,15 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "../components/AuthContext";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const { isLoggedIn, role, isLoading, logout } = useAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role"); // Załóżmy, że rolę zapisujesz podczas logowania
-    if (token) {
-      setIsLoggedIn(true);
-      if (role) setUserRole(role);
-    } else {
-      setIsLoggedIn(false);
-      setUserRole(null);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    setIsLoggedIn(false);
-    setUserRole(null);
-  };
+  if (isLoading) {
+    return null; // Nie renderuj nic, dopóki `AuthContext` się nie zainicjalizuje
+  }
 
   return (
     <nav className="w-full bg-white border-b border-gray-200">
@@ -48,22 +32,10 @@ const Navbar = () => {
 
         <div className="hidden md:flex space-x-4">
           <Link
-            href="/reports"
+            href="/"
             className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
           >
-            Zgłoszenia
-          </Link>
-          <Link
-            href="/users"
-            className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
-          >
-            Użytkownicy
-          </Link>
-          <Link
-            href="/dashboard"
-            className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
-          >
-            Raporty
+            Strona główna
           </Link>
 
           {isLoggedIn && (
@@ -75,26 +47,27 @@ const Navbar = () => {
                 Przedmioty
               </Link>
               <Link
-                href="/my-submissions"
+                href="/user-claims"
                 className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
               >
-                Twoje zgłoszenia
+                Twoje roszczenia
+              </Link>
+              <Link
+                href="/user-lost-item"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Zgłoś zagubienie
+              </Link>
+              <Link
+                href="/user-lost-items"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Zgłoś
               </Link>
             </>
           )}
 
-          {/* Warunkowo wyświetlany panel zarządzania dla roli "admin" */}
-          {isLoggedIn && userRole === "admin" && (
-            <Link
-              href="/admin-panel"
-              className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
-            >
-              Panel Zarządzania
-            </Link>
-          )}
-
-          {/* Warunkowo wyświetlany panel zarządzania dla roli "admin" */}
-          {isLoggedIn && userRole === "admin" && (
+          {isLoggedIn && role === "admin" && (
             <Link
               href="/admin-panel"
               className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
@@ -104,7 +77,6 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Panel użytkownika / Logowanie/wylogowanie */}
         <div className="flex items-center space-x-4">
           {!isLoggedIn ? (
             <Link
@@ -115,7 +87,7 @@ const Navbar = () => {
             </Link>
           ) : (
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="px-4 py-2 border border-green-500 text-green-500 hover:bg-green-500 hover:text-white rounded-md font-medium transition duration-300"
             >
               Wyloguj

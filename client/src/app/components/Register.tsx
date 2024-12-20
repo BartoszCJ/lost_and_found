@@ -7,13 +7,36 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+  }>({});
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const validateFields = () => {
+    const errors: { name?: string; email?: string; password?: string } = {};
+    if (!name.trim()) errors.name = "Nazwa użytkownika jest wymagana.";
+    if (!email.trim()) errors.email = "Email jest wymagany.";
+    else if (!/^\S+@\S+\.\S+$/.test(email))
+      errors.email = "Podaj poprawny email.";
+
+    if (!password.trim()) errors.password = "Hasło jest wymagane.";
+    else if (password.length < 6)
+      errors.password = "Hasło musi mieć co najmniej 6 znaków.";
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
+
+    if (!validateFields()) return;
+
     setLoading(true);
 
     try {
@@ -59,7 +82,9 @@ const Register = () => {
           setUsername(e.target.value)
         }
         placeholder="Wpisz nazwę użytkownika"
+        error={fieldErrors.name}
       />
+
       <InputField
         label="Email"
         icon="/assets/icons/email.png"
@@ -68,17 +93,23 @@ const Register = () => {
           setEmail(e.target.value)
         }
         placeholder="Wpisz swój email"
+        error={fieldErrors.email}
       />
+
       <InputField
         label="Hasło"
         icon="/assets/icons/lock.png"
+        secureTextEntry
         value={password}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setPassword(e.target.value)
         }
         placeholder="Wpisz swoje hasło"
-        secureTextEntry
+        showpasswordstrength={true} // Aktywacja wskaźnika siły hasła
       />
+      {fieldErrors.password && (
+        <p className="text-red-500 text-sm">{fieldErrors.password}</p>
+      )}
       <div className="p-4">
         <CustomButton
           onClick={handleSubmit}

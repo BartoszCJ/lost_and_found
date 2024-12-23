@@ -37,8 +37,13 @@ const Navbar = () => {
           >
             Strona główna
           </Link>
-
-          {isLoggedIn && (
+          <Link
+            href="/"
+            className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+          >
+            Kontakt
+          </Link>
+          {isLoggedIn && role === "user" && (
             <>
               <Link
                 href="/items"
@@ -59,21 +64,50 @@ const Navbar = () => {
                 Zgłoś zagubienie
               </Link>
               <Link
-                href="/user-lost-items"
+                href="/user-lost-item-status"
                 className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
               >
-                Zgłoś
+                Twoje zguby
               </Link>
             </>
           )}
-
+          {isLoggedIn && role === "employee" && (
+            <>
+              <Link
+                href="/all-items"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Wszystkie przedmioty
+              </Link>
+              <Link
+                href="/employee-ownership-claims"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Roszczenia własności
+              </Link>
+              <Link
+                href="/lost-reports"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Zgłoszenia
+              </Link>
+              <Link
+                href="/add-item"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Dodaj przedmiot
+              </Link>
+            </>
+          )}
           {isLoggedIn && role === "admin" && (
-            <Link
-              href="/admin-panel"
-              className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
-            >
-              Panel Zarządzania
-            </Link>
+            <>
+              <Link
+                href="/"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Admin panel
+              </Link>
+            </>
           )}
         </div>
 

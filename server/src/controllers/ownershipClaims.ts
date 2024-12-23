@@ -19,12 +19,12 @@ export const createOwnershipClaim = async (
       where: { item_id, user_id: userId },
     });
 
-//    if (existingClaim) {
- //     res
-   //     .status(400)
-   //     .json({ error: "You have already submitted a claim for this item." });
-  //    return;
-  //  }
+    //    if (existingClaim) {
+    //     res
+    //     .status(400)
+    //     .json({ error: "You have already submitted a claim for this item." });
+    //    return;
+    //  }
 
     const newClaim = await prisma.ownership_claims.create({
       data: {
@@ -44,42 +44,102 @@ export const createOwnershipClaim = async (
 };
 
 // Pobranie wszystkich zgłoszeń własności (dla pracowników/adminów)
-export const getOwnershipClaims = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getOwnershipClaims = async (req: Request, res: Response) => {
   try {
+    // 1. Odczytujemy parametry z query
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const statusFilter = req.query.status as string | undefined; // "pending", "approved", "rejected", etc.
+
+    // 2. Wyliczamy offset (skip)
+    const skip = (page - 1) * limit;
+
+    // 3. Budujemy obiekt "where" dla filtra statusu
+    let whereClause: any = {};
+    if (statusFilter && statusFilter !== "all") {
+      whereClause.status = statusFilter;
+    }
+
+    // 4. Pytamy się o dane z Prisma z skip, take i where
     const claims = await prisma.ownership_claims.findMany({
+      skip,
+      take: limit,
+      where: whereClause,
       include: {
-        user: true, // Dane właściciela zgłoszenia
-        item: true, // Dane powiązanego przedmiotu
-        verifiedBy: true, // Dane pracownika zatwierdzającego zgłoszenie (opcjonalnie)
+        user: true,
+        item: true,
+        verifiedBy: true,
       },
     });
 
-    res.json(claims);
+    // 5. Obliczamy łączną liczbę rekordów (do stronicowania)
+    const totalCount = await prisma.ownership_claims.count({
+      where: whereClause,
+    });
+
+    // 6. Zwracamy dane w "opakowanym" formacie
+    res.json({
+      data: claims,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+      totalCount,
+    });
   } catch (error) {
     console.error("Error fetching ownership claims:", error);
     res.status(500).json({ error: "Error fetching ownership claims" });
   }
 };
 
-// Aktualizacja statusu zgłoszenia własności
-export const updateOwnershipClaim = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+
+export const updateOwnershipClaim = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { status, verified_by } = req.body;
+    const { status } = req.body;
+    const employeeId = (req as any).user.id; // z tokena
 
-    const updatedClaim = await prisma.ownership_claims.update({
+    // Najpierw pobierz aktualne zgłoszenie, żeby poznać item_id
+    const currentClaim = await prisma.ownership_claims.findUnique({
       where: { id: Number(id) },
-      data: { status, verified_by },
     });
 
-    res.json(updatedClaim);
+    if (!currentClaim) {
+      return res.status(404).json({ error: "Claim not found" });
+    }
+
+    // Transakcja: zaktualizuj ownership_claims, a jeśli `approved`, to także items
+    await prisma.$transaction(async (tx) => {
+      // 1) Aktualizujemy samo roszczenie (zapisując verified_by)
+      const updatedClaim = await tx.ownership_claims.update({
+        where: { id: Number(id) },
+        data: {
+          status,
+          verified_by: employeeId,
+        },
+      });
+
+      // 2) Jeżeli status to "approved", ustaw item na "claimed"
+      if (status === "approved") {
+        await tx.items.update({
+          where: { id: currentClaim.item_id },
+          data: { status: "claimed" },
+        });
+      }
+
+      // Możesz też zwrócić updatedClaim, ale wtedy zwrócisz status sprzed transakcji
+      // Lepiej pobrać ponownie z bazy, aby mieć finalny stan
+    });
+
+    // Po transakcji – pobierz finalny stan roszczenia (opcjonalnie)
+    const finalClaim = await prisma.ownership_claims.findUnique({
+      where: { id: Number(id) },
+      include: {
+        item: true,
+      },
+    });
+
+    res.json(finalClaim);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error updating ownership claim" });
   }
 };

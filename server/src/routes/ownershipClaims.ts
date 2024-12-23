@@ -27,12 +27,13 @@ router.get(
 );
 
 // Aktualizacja statusu zgłoszenia (dla pracowników/adminów)
-router.patch(
+router.post(
   "/:id",
   authenticateJWT,
   authorizeRole(["employee", "admin"]),
   updateOwnershipClaim
 );
+
 router.get("/user", authenticateJWT, getUserOwnershipClaims);
 
 export default router;

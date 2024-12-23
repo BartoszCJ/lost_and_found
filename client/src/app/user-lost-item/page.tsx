@@ -49,7 +49,7 @@ const UserLostItem = () => {
       if (!response.ok) throw new Error("Błąd podczas dodawania zgłoszenia.");
 
       alert("Zgłoszenie zostało dodane!");
-      router.push("/dashboard"); // Przekierowanie po sukcesie
+      router.push("/user-lost-item-status"); // Przekierowanie po sukcesie
     } catch (error) {
       console.error(error);
       alert("Coś poszło nie tak. Spróbuj ponownie.");
@@ -115,7 +115,7 @@ const UserLostItem = () => {
           <CustomButton
             type="button"
             title="Anuluj"
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/")}
             bgVariant="secondary"
           />
         </div>

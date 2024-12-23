@@ -4,14 +4,22 @@ import prisma from "../src/prisma";
 export const initializeUsers = async () => {
   try {
     const users = [
-      { name: "User", email: "user@user.com", password: "user", role: "user" },
       {
+        id: 1,
+        name: "User",
+        email: "user@user.com",
+        password: "user",
+        role: "user",
+      },
+      {
+        id: 2,
         name: "Admin",
         email: "admin@admin.com",
         password: "admin",
         role: "admin",
       },
       {
+        id: 3,
         name: "Employee",
         email: "employee@employee.com",
         password: "employee",
@@ -47,6 +55,7 @@ export const initializeItems = async () => {
   try {
     const items = [
       {
+        id: 1,
         name: "Black Wallet",
         description: "A small black wallet with cards inside.",
         category: "Accessories",
@@ -54,6 +63,7 @@ export const initializeItems = async () => {
         status: "found",
       },
       {
+        id: 2,
         name: "Silver Ring",
         description: "A silver ring with an engraving.",
         category: "Jewelry",
@@ -61,6 +71,7 @@ export const initializeItems = async () => {
         status: "unclaimed",
       },
       {
+        id: 3,
         name: "Blue Backpack",
         description: "A large blue backpack with books.",
         category: "Bags",
@@ -87,15 +98,26 @@ export const initializeItems = async () => {
 
 export const initializeLostReports = async () => {
   try {
+    const user1 = await prisma.users.findUnique({
+      where: { email: "user@user.com" },
+    });
+    const user2 = await prisma.users.findUnique({
+      where: { email: "admin@admin.com" },
+    });
+    if (!user1 || !user2) {
+      throw new Error(
+        "Required users not found. Please initialize users first."
+      );
+    }
     const lostReports = [
       {
-        user_id: 1,
+        user_id: user1?.id,
         item_id: 1,
         date_reported: new Date().toISOString(),
         status: "pending",
       },
       {
-        user_id: 2,
+        user_id: user2?.id,
         item_id: 2,
         date_reported: new Date().toISOString(),
         status: "resolved",
@@ -120,17 +142,29 @@ export const initializeLostReports = async () => {
 
 export const initializeOwnershipClaims = async () => {
   try {
+    const user1 = await prisma.users.findUnique({
+      where: { email: "user@user.com" },
+    });
+    const user2 = await prisma.users.findUnique({
+      where: { email: "admin@admin.com" },
+    });
+
+    if (!user1 || !user2) {
+      console.error("Brak wymaganych użytkowników lub przedmiotów.");
+      return;
+    }
+
     const ownershipClaims = [
       {
         item_id: 1,
-        user_id: 1,
+        user_id: user1.id,
         description: "I lost this wallet in Central Park.",
         status: "pending",
         date_submitted: new Date().toISOString(),
       },
       {
         item_id: 2,
-        user_id: 2,
+        user_id: user2.id,
         description: "This ring was a gift from my grandmother.",
         status: "approved",
         date_submitted: new Date().toISOString(),
@@ -141,6 +175,7 @@ export const initializeOwnershipClaims = async () => {
       const existingClaim = await prisma.ownership_claims.findFirst({
         where: { item_id: claim.item_id, user_id: claim.user_id },
       });
+
       if (!existingClaim) {
         await prisma.ownership_claims.create({ data: claim });
         console.log(`Ownership Claim for item ${claim.item_id} created.`);

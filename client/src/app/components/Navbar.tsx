@@ -86,7 +86,7 @@ const Navbar = () => {
                 Roszczenia własności
               </Link>
               <Link
-                href="/lost-reports"
+                href="/employee-lost-reports"
                 className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
               >
                 Zgłoszenia
@@ -121,7 +121,9 @@ const Navbar = () => {
             </Link>
           ) : (
             <button
-              onClick={logout}
+              onClick={() => {
+                logout();
+              }}
               className="px-4 py-2 border border-green-500 text-green-500 hover:bg-green-500 hover:text-white rounded-md font-medium transition duration-300"
             >
               Wyloguj

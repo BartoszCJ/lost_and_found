@@ -10,8 +10,8 @@ const UserLostItem = () => {
     name: "",
     description: "",
     category: "",
-    location_found: "",
-    date_found: "",
+    location_lost: "",
+    date_lost: "",
   });
   const [errors, setErrors] = useState({});
   const router = useRouter();
@@ -96,19 +96,19 @@ const UserLostItem = () => {
         </div>
         <InputField
           label="Miejsce zgubienia"
-          name="location_found"
-          value={form.location_found}
+          name="location_lost"
+          value={form.location_lost}
           onChange={handleInputChange}
           placeholder="Wprowadź lokalizację"
         />
         <InputField
           label="Data zgubienia"
-          name="date_found"
+          name="date_lost"
           type="date"
-          value={form.date_found}
+          value={form.date_lost}
           onChange={handleInputChange}
           placeholder="Wybierz datę"
-          error={errors.date_found}
+          error={errors.date_lost}
         />
         <div className="flex space-x-4 mt-6">
           <CustomButton type="submit" title="Zgłoś zagubienie" />

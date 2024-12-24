@@ -44,8 +44,8 @@ model lost_reports {
   item          items?   @relation(fields: [item_id], references: [id])
   name          String   @default("") // Domyślna wartość
   description   String   @default("") // Domyślna wartość
-  location_found String  @default("") // Domyślna wartość
-  date_found    DateTime @default(now()) // Domyślna wartość
+  location_lost String  @default("") // Domyślna wartość
+  date_lost    DateTime @default(now()) // Domyślna wartość
   status        String   // "pending", "resolved", "rejected"
   date_reported DateTime @default(now())
 }

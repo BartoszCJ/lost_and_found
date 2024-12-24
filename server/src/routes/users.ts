@@ -7,7 +7,7 @@ const router: Router = Router();
 
 
 router.post('/register', validateRequest(registerSchema), registerUser);
-router.post('/login', validateRequest(loginSchema), loginUser);
+router.post('/login', loginUser);
 router.get('/', getUsers);
 router.post('/', addUser);
 

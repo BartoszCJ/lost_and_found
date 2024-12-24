@@ -5,24 +5,39 @@ export const initializeUsers = async () => {
   try {
     const users = [
       {
-        id: 1,
         name: "User",
         email: "user@user.com",
         password: "user",
         role: "user",
       },
       {
-        id: 2,
         name: "Admin",
         email: "admin@admin.com",
         password: "admin",
         role: "admin",
       },
       {
-        id: 3,
         name: "Employee",
         email: "employee@employee.com",
         password: "employee",
+        role: "employee",
+      },
+      {
+        name: "U",
+        email: "u",
+        password: "u",
+        role: "user",
+      },
+      {
+        name: "A",
+        email: "a",
+        password: "a",
+        role: "admin",
+      },
+      {
+        name: "E",
+        email: "e",
+        password: "e",
         role: "employee",
       },
     ];
@@ -41,13 +56,13 @@ export const initializeUsers = async () => {
             role: user.role,
           },
         });
-        console.log(`User ${user.name} created.`);
+        console.log(`Stworzono ${user.name}.`);
       } else {
-        console.log(`User ${user.name} already exists.`);
+        console.log(`User ${user.name} już istnieje.`);
       }
     }
   } catch (error) {
-    console.error("Error initializing users:", error);
+    console.error("Error przy tworzeniu userow", error);
   }
 };
 
@@ -56,26 +71,26 @@ export const initializeItems = async () => {
     const items = [
       {
         id: 1,
-        name: "Black Wallet",
-        description: "A small black wallet with cards inside.",
-        category: "Accessories",
-        location_found: "Central Park",
+        name: "Czarny portfel",
+        description: "Mały portfel z dokumentami i gotówką w środku.",
+        category: "Akcesoria",
+        location_found: "Park Miejski",
         status: "found",
       },
       {
         id: 2,
-        name: "Silver Ring",
-        description: "A silver ring with an engraving.",
-        category: "Jewelry",
-        location_found: "Coffee Shop",
-        status: "unclaimed",
+        name: "Srebrny pierścionek",
+        description: "Pierścionek z wygrawerowanymi inicjałami.",
+        category: "Biżuteria",
+        location_found: "Kawiarnia Starówka",
+        status: "found",
       },
       {
         id: 3,
-        name: "Blue Backpack",
-        description: "A large blue backpack with books.",
-        category: "Bags",
-        location_found: "Library",
+        name: "Niebieski plecak",
+        description: "Plecak z książkami i laptopem w środku.",
+        category: "Plecaki",
+        location_found: "Biblioteka Główna",
         status: "claimed",
       },
     ];
@@ -86,16 +101,15 @@ export const initializeItems = async () => {
       });
       if (!existingItem) {
         await prisma.items.create({ data: item });
-        console.log(`Item ${item.name} created.`);
+        console.log(`Item ${item.name} stworzony.`);
       } else {
-        console.log(`Item ${item.name} already exists.`);
+        console.log(`Item ${item.name} juz istnieje`);
       }
     }
   } catch (error) {
-    console.error("Error initializing items:", error);
+    console.error("Error przy tworzeniu itemow:", error);
   }
 };
-
 export const initializeLostReports = async () => {
   try {
     const user1 = await prisma.users.findUnique({
@@ -104,39 +118,45 @@ export const initializeLostReports = async () => {
     const user2 = await prisma.users.findUnique({
       where: { email: "admin@admin.com" },
     });
+
     if (!user1 || !user2) {
-      throw new Error(
-        "Required users not found. Please initialize users first."
-      );
+      throw new Error("Brak userow.");
     }
+
     const lostReports = [
       {
-        user_id: user1?.id,
-        item_id: 1,
+        user_id: user1.id, // Poprawne przypisanie ID użytkownika
+        name: "Portfel",
         date_reported: new Date().toISOString(),
         status: "pending",
+        description: "Portfel z czarnej skóry",
+        date_lost: new Date("2000-12-22"),
+        location_lost: "Sala 34",
       },
       {
-        user_id: user2?.id,
-        item_id: 2,
+        user_id: user2.id,
+        name: "Pierścionek",
         date_reported: new Date().toISOString(),
-        status: "resolved",
+        status: "pending",
+        description: "Srebrny pierścionek",
+        date_lost: new Date("1000-12-22"),
+        location_lost: "Sala 100 pod krzesłem obok okna",
       },
     ];
 
     for (const report of lostReports) {
       const existingReport = await prisma.lost_reports.findFirst({
-        where: { user_id: report.user_id, item_id: report.item_id },
+        where: { user_id: report.user_id, name: report.name },
       });
       if (!existingReport) {
         await prisma.lost_reports.create({ data: report });
-        console.log(`Lost Report for item ${report.item_id} created.`);
+        console.log(`Zgłoszenie '${report.name}' zostało utworzone.`);
       } else {
-        console.log(`Lost Report for item ${report.item_id} already exists.`);
+        console.log(`Zgłoszenie '${report.name}' już istnieje.`);
       }
     }
   } catch (error) {
-    console.error("Error initializing lost reports:", error);
+    console.error("Błąd inicjalizacji zgłoszeń o zagubieniach:", error);
   }
 };
 
@@ -158,14 +178,15 @@ export const initializeOwnershipClaims = async () => {
       {
         item_id: 1,
         user_id: user1.id,
-        description: "I lost this wallet in Central Park.",
+        description:
+          "Ten portfel należy do mnie, zgubiłem go w Parku Miejskim.",
         status: "pending",
         date_submitted: new Date().toISOString(),
       },
       {
         item_id: 2,
         user_id: user2.id,
-        description: "This ring was a gift from my grandmother.",
+        description: "Pamiątka rodzinna, pierścionek z inicjałami po babci.",
         status: "approved",
         date_submitted: new Date().toISOString(),
       },

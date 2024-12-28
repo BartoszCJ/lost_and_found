@@ -35,11 +35,19 @@ export default function Items() {
     }
   };
 
+  // Filtrowanie: wyrzucamy "claimed" i szukamy po nazwie
+  const filteredItems = items
+    .filter((item) => item.status !== "claimed")
+    .filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
       <h1 className="text-3xl font-bold text-gray-800 mb-4">
         Wyszukaj przedmiot
       </h1>
+
       <div className="w-full max-w-md">
         <input
           type="text"
@@ -55,9 +63,13 @@ export default function Items() {
           Szukaj
         </button>
       </div>
-      {items.length > 0 && (
+
+      {/* GŁÓWNY RENDER LISTY (lub komunikat) */}
+      {filteredItems.length === 0 ? (
+        <p className="mt-8 text-gray-600">Brak wyszukiwanych przedmiotów.</p>
+      ) : (
         <ul className="mt-8 w-full max-w-4xl bg-white shadow-lg rounded-lg divide-y divide-gray-200">
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <li key={item.id} className="p-4 hover:bg-gray-50">
               <h2 className="text-lg font-semibold text-gray-800">
                 {item.name}
@@ -75,6 +87,7 @@ export default function Items() {
           ))}
         </ul>
       )}
+
       {selectedItem && (
         <ClaimForm item={selectedItem} onClose={() => setSelectedItem(null)} />
       )}

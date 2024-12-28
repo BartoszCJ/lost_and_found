@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import InputField from "../components/InputField";
 import CustomButton from "../components/CustomButton";
-import { useRouter } from "next/navigation";
 
 const UserLostItem = () => {
   const [form, setForm] = useState({
@@ -13,7 +13,8 @@ const UserLostItem = () => {
     location_lost: "",
     date_lost: "",
   });
-  const [errors, setErrors] = useState({});
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const router = useRouter();
 
   const handleInputChange = (
@@ -23,11 +24,17 @@ const UserLostItem = () => {
   };
 
   const validate = () => {
-    const newErrors: any = {};
-    if (!form.name) newErrors.name = "Nazwa przedmiotu jest wymagana.";
-    if (!form.category) newErrors.category = "Kategoria jest wymagana.";
-    if (!form.date_found)
-      newErrors.date_found = "Data zgubienia jest wymagana.";
+    const newErrors: { [key: string]: string } = {};
+    if (!form.name) {
+      newErrors.name = "Nazwa przedmiotu jest wymagana.";
+    }
+    if (!form.category) {
+      newErrors.category = "Kategoria jest wymagana.";
+    }
+    // Poprawione: sprawdzamy "date_lost" (a nie "date_found")
+    if (!form.date_lost) {
+      newErrors.date_lost = "Data zgubienia jest wymagana.";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -70,6 +77,7 @@ const UserLostItem = () => {
           placeholder="Wprowadź nazwę przedmiotu"
           error={errors.name}
         />
+
         <InputField
           label="Opis przedmiotu"
           name="description"
@@ -77,6 +85,8 @@ const UserLostItem = () => {
           onChange={handleInputChange}
           placeholder="Wprowadź szczegóły"
         />
+
+        {/* Kategoria - select */}
         <div className="mb-4">
           <label className="block text-lg font-semibold mb-2">Kategoria</label>
           <select
@@ -94,6 +104,7 @@ const UserLostItem = () => {
             <p className="text-red-500 text-sm mt-1">{errors.category}</p>
           )}
         </div>
+
         <InputField
           label="Miejsce zgubienia"
           name="location_lost"
@@ -101,6 +112,7 @@ const UserLostItem = () => {
           onChange={handleInputChange}
           placeholder="Wprowadź lokalizację"
         />
+
         <InputField
           label="Data zgubienia"
           name="date_lost"
@@ -110,6 +122,7 @@ const UserLostItem = () => {
           placeholder="Wybierz datę"
           error={errors.date_lost}
         />
+
         <div className="flex space-x-4 mt-6">
           <CustomButton type="submit" title="Zgłoś zagubienie" />
           <CustomButton

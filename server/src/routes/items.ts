@@ -7,6 +7,6 @@ const router: Router = Router();
 
 // Zabezpieczone trasy
 router.get("/", authenticateJWT, authorizeRole(["employee", "user"]), getItems);
-router.post("/", authenticateJWT, addItem);
+router.post("/", authenticateJWT, authorizeRole(["employee"]), addItem);
 
 export default router;

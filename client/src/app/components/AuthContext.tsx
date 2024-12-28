@@ -10,6 +10,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (token: string) => void;
   logout: () => void;
+  getToken: () => string | null; // Nowa funkcja
 }
 
 interface TokenPayload {
@@ -26,21 +27,25 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   login: () => {},
   logout: () => {},
+  getToken: () => null,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState<string>("guest");
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null); // Stan na token
   const router = useRouter();
+
   const isTokenExpired = (exp: number) => Date.now() >= exp * 1000;
 
   const logout = () => {
     localStorage.removeItem("token");
+    setToken(null);
     setIsLoggedIn(false);
     setRole("guest");
     setIsLoading(false);
-    router.push("/"); // Przekierowanie
+    router.push("/");
   };
 
   const login = (token: string) => {
@@ -51,6 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
       localStorage.setItem("token", token);
+      setToken(token); // Zapis tokena
       setIsLoggedIn(true);
       setRole(decoded.role);
       setIsLoading(false);
@@ -59,12 +65,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const getToken = () => token; // Funkcja zwracająca token
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
       try {
-        const decoded = jwtDecode<TokenPayload>(token);
+        const decoded = jwtDecode<TokenPayload>(storedToken);
         if (!decoded.exp || !isTokenExpired(decoded.exp)) {
+          setToken(storedToken); // Ustawienie tokena
           setIsLoggedIn(true);
           setRole(decoded.role);
         } else {
@@ -79,7 +88,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, role, isLoading, login, logout }}
+      value={{ isLoggedIn, role, isLoading, login, logout, getToken }}
     >
       {children}
     </AuthContext.Provider>

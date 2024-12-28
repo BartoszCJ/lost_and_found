@@ -92,7 +92,7 @@ const Navbar = () => {
                 Zgłoszenia
               </Link>
               <Link
-                href="/add-item"
+                href="/employee-add-item"
                 className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
               >
                 Dodaj przedmiot
@@ -101,6 +101,30 @@ const Navbar = () => {
           )}
           {isLoggedIn && role === "admin" && (
             <>
+              <Link
+                href="/admin-user-managment"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Users
+              </Link>
+              <Link
+                href="/"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Admin panel
+              </Link>
+              <Link
+                href="/"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Admin panel
+              </Link>
+              <Link
+                href="/"
+                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
+              >
+                Admin panel
+              </Link>
               <Link
                 href="/"
                 className="text-gray-600 hover:text-green-600 font-medium transition duration-300"

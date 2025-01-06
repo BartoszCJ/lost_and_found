@@ -1,16 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 
-// Przykładowe typy
 interface User {
   id: number;
   name: string;
   email: string;
   role: "user" | "employee" | "admin";
-  isBlocked?: boolean; // uproszczone pole blokady
+  isBlocked?: boolean; 
 }
 
-// Możesz mieć też inny model, np. separate od role
 
 const AdminPanel: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -18,7 +17,6 @@ const AdminPanel: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Fetch lista użytkowników (w tym pracowników)
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -46,7 +44,6 @@ const AdminPanel: React.FC = () => {
     fetchUsers();
   }, []);
 
-  // Zmiana roli usera
   const handleChangeRole = async (userId: number, newRole: string) => {
     try {
       const token = localStorage.getItem("token");
@@ -70,7 +67,6 @@ const AdminPanel: React.FC = () => {
     }
   };
 
-  // Blokowanie/deblokowanie użytkownika
   const handleBlockUser = async (userId: number, block: boolean) => {
     try {
       const token = localStorage.getItem("token");
@@ -94,7 +90,6 @@ const AdminPanel: React.FC = () => {
     }
   };
 
-  // Reset hasła użytkownika
   const handleResetPassword = async (userId: number) => {
     try {
       const token = localStorage.getItem("token");
@@ -116,7 +111,6 @@ const AdminPanel: React.FC = () => {
     }
   };
 
-  // Dodawanie nowego pracownika
   const handleAddEmployee = async () => {
     if (!newEmployeeEmail.trim()) return;
     try {
@@ -191,7 +185,7 @@ const AdminPanel: React.FC = () => {
                     {u.email}
                   </td>
                   <td className="border border-gray-200 px-4 py-2">
-                    {/* Zmiana roli */}
+                 
                     <select
                       value={u.role}
                       onChange={(e) => handleChangeRole(u.id, e.target.value)}

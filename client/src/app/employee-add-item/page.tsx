@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -13,13 +14,12 @@ const EmployeeAddItem: React.FC = () => {
     category: "",
     location_found: "",
     date_found: "",
-    status: "found", // Domyślnie found
+    status: "found", 
   });
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Obsługa zmiany pól
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -29,13 +29,12 @@ const EmployeeAddItem: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Obsługa wysłania formularza
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    // Walidacja minimalna
+
     if (!formData.name.trim()) {
       setError("Nazwa przedmiotu jest wymagana.");
       return;
@@ -45,7 +44,6 @@ const EmployeeAddItem: React.FC = () => {
       return;
     }
 
-    // Pobierz token z localStorage lub cookies
     const token = localStorage.getItem("token");
     if (!token) {
       setError("Brak tokena - zaloguj się jako pracownik.");
@@ -69,7 +67,6 @@ const EmployeeAddItem: React.FC = () => {
 
       const newItem = await res.json();
       setSuccess(`Przedmiot "${newItem.name}" został dodany pomyślnie.`);
-      // Wyczyść formularz
       setFormData({
         name: "",
         description: "",

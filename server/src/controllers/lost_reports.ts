@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import prisma from "../prisma";
 
-// Dodanie nowego zgłoszenia o zgubieniu
+
 export const createLostReport = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const userId = (req as any).user.id; // ID użytkownika z JWT
+    const userId = (req as any).user.id; 
     const { name, description, location_lost, date_lost } = req.body;
 
     if (!name || !description || !location_lost || !date_lost) {
@@ -39,12 +39,12 @@ export const getUserLostReports = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = (req as any).user.id; // ID użytkownika z JWT
+    const userId = (req as any).user.id; 
 
     const reports = await prisma.lost_reports.findMany({
       where: { user_id: userId },
       include: {
-        item: true, // Opcjonalnie pobieramy szczegóły powiązanego przedmiotu
+        item: true, 
       },
     });
 
@@ -55,7 +55,6 @@ export const getUserLostReports = async (
   }
 };
 
-// Pobranie wszystkich zgłoszeń o zagubieniu
 export const getLostReports = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
@@ -91,7 +90,6 @@ export const getLostReports = async (req: Request, res: Response) => {
   }
 };
 
-// Aktualizacja statusu zgłoszenia
 export const updateLostReport = async (
   req: Request,
   res: Response
@@ -119,7 +117,6 @@ export const assignItemToLostReport = async (
     const { id } = req.params;
     const { itemId } = req.body;
 
-    // Find the lost report
     const report = await prisma.lost_reports.findUnique({
       where: { id: Number(id) },
     });
@@ -128,7 +125,6 @@ export const assignItemToLostReport = async (
       return;
     }
 
-    // Find the item
     const item = await prisma.items.findUnique({
       where: { id: Number(itemId) },
     });
@@ -137,7 +133,6 @@ export const assignItemToLostReport = async (
       return;
     }
 
-    // Update the lost report and item in a transaction
     await prisma.$transaction(async (tx) => {
       await tx.lost_reports.update({
         where: { id: report.id },
@@ -153,7 +148,6 @@ export const assignItemToLostReport = async (
       });
     });
 
-    // Fetch the updated report with related data
     const updatedReport = await prisma.lost_reports.findUnique({
       where: { id: Number(id) },
       include: { user: true, item: true },

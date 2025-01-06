@@ -105,7 +105,7 @@ const Register = () => {
           setPassword(e.target.value)
         }
         placeholder="Wpisz swoje hasło"
-        showpasswordstrength={true} // Aktywacja wskaźnika siły hasła
+        showpasswordstrength={true} 
       />
       {fieldErrors.password && (
         <p className="text-red-500 text-sm">{fieldErrors.password}</p>

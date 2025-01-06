@@ -1,0 +1,65 @@
+[33mcommit dfa62e226879ad5ebd46051a5e739d285cf929a9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Sat Dec 28 01:40:09 2024 +0100
+
+    Employee completed, admin panel started
+
+[33mcommit 60423fa08166855c8fe22a1167e7b714e5b255f7[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Tue Dec 24 01:22:47 2024 +0100
+
+    Db update employe action implementation
+
+[33mcommit 42c6c6f7e4a6c108e66ddc357888eb6430358a41[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Tue Dec 24 00:26:01 2024 +0100
+
+    Employee implementation
+
+[33mcommit 68eb95ce45d7d27d14b245efcd9d90b93c208a8a[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Fri Dec 20 22:37:31 2024 +0100
+
+    user functionalities
+
+[33mcommit cb75003c727b32335a6c68f318a6ee6d431259d6[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Fri Dec 20 00:32:23 2024 +0100
+
+    Css
+
+[33mcommit d9f6f03aceab58e673472f54eba6e28742e1e722[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Thu Dec 19 22:35:57 2024 +0100
+
+    Auth Users Items
+
+[33mcommit 7908c436fd4b906ca7679a0129853b96ddf83000[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Thu Dec 19 21:04:27 2024 +0100
+
+    Auth
+
+[33mcommit 5d0ff60626519df07e982f9cb6c92408f838b8eb[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Tue Dec 17 14:15:03 2024 +0100
+
+    Backend
+
+[33mcommit 311d4416db1d1e5b34b58d3b76a6f8371aa0b911[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Mon Dec 16 20:55:35 2024 +0100
+
+    Prisma
+
+[33mcommit dc01b2593a63b69d95943094893b255dc08ed3d5[m
+Author: BartoszCoJest <bartoszcojest@gmail.com>
+Date:   Mon Dec 16 20:24:14 2024 +0100
+
+    Next
+
+[33mcommit c359fc273d9ea65a3c07a89995d59b672750b1f4[m
+Author: Bartosz <106112792+BartoszCJ@users.noreply.github.com>
+Date:   Mon Dec 16 20:07:43 2024 +0100
+
+    Initial commit

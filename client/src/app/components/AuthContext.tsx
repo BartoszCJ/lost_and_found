@@ -10,7 +10,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (token: string) => void;
   logout: () => void;
-  getToken: () => string | null; // Nowa funkcja
+  getToken: () => string | null;
 }
 
 interface TokenPayload {
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState<string>("guest");
   const [isLoading, setIsLoading] = useState(true);
-  const [token, setToken] = useState<string | null>(null); // Stan na token
+  const [token, setToken] = useState<string | null>(null); 
   const router = useRouter();
 
   const isTokenExpired = (exp: number) => Date.now() >= exp * 1000;
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
       localStorage.setItem("token", token);
-      setToken(token); // Zapis tokena
+      setToken(token);
       setIsLoggedIn(true);
       setRole(decoded.role);
       setIsLoading(false);
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const getToken = () => token; // Funkcja zwracająca token
+  const getToken = () => token; 
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const decoded = jwtDecode<TokenPayload>(storedToken);
         if (!decoded.exp || !isTokenExpired(decoded.exp)) {
-          setToken(storedToken); // Ustawienie tokena
+          setToken(storedToken); 
           setIsLoggedIn(true);
           setRole(decoded.role);
         } else {

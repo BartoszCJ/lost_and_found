@@ -6,14 +6,14 @@ export const authorizeRole = (requiredRoles: string[]) => {
 
       if (!user) {
           res.status(401).json({ error: "Unauthorized: No token provided" });
-          return; // Dodaj return tutaj
+          return; 
       }
 
       if (!requiredRoles.includes(user.role)) {
           res.status(403).json({ error: "Forbidden: Insufficient permissions" });
-          return; // Dodaj return tutaj
+          return; 
       }
 
-      next(); // Przejdź dalej, jeśli wszystko jest OK
+      next(); 
   };
 };

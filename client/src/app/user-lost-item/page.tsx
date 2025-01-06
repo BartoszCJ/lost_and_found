@@ -31,7 +31,6 @@ const UserLostItem = () => {
     if (!form.category) {
       newErrors.category = "Kategoria jest wymagana.";
     }
-    // Poprawione: sprawdzamy "date_lost" (a nie "date_found")
     if (!form.date_lost) {
       newErrors.date_lost = "Data zgubienia jest wymagana.";
     }
@@ -48,7 +47,7 @@ const UserLostItem = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Dodaj token do nagłówka
+          Authorization: `Bearer ${localStorage.getItem("token")}`, 
         },
         body: JSON.stringify(form),
       });
@@ -56,7 +55,7 @@ const UserLostItem = () => {
       if (!response.ok) throw new Error("Błąd podczas dodawania zgłoszenia.");
 
       alert("Zgłoszenie zostało dodane!");
-      router.push("/user-lost-item-status"); // Przekierowanie po sukcesie
+      router.push("/user-lost-item-status"); 
     } catch (error) {
       console.error(error);
       alert("Coś poszło nie tak. Spróbuj ponownie.");
@@ -86,7 +85,6 @@ const UserLostItem = () => {
           placeholder="Wprowadź szczegóły"
         />
 
-        {/* Kategoria - select */}
         <div className="mb-4">
           <label className="block text-lg font-semibold mb-2">Kategoria</label>
           <select

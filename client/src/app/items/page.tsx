@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Item } from "../types/type";
-import ClaimForm from "../components/ClaimForm"; // Import nowego komponentu
+import ClaimForm from "../components/ClaimForm"; 
 
 export default function Items() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +35,6 @@ export default function Items() {
     }
   };
 
-  // Filtrowanie: wyrzucamy "claimed" i szukamy po nazwie
   const filteredItems = items
     .filter((item) => item.status !== "claimed")
     .filter((item) =>
@@ -64,7 +63,7 @@ export default function Items() {
         </button>
       </div>
 
-      {/* GŁÓWNY RENDER LISTY (lub komunikat) */}
+    
       {filteredItems.length === 0 ? (
         <p className="mt-8 text-gray-600">Brak wyszukiwanych przedmiotów.</p>
       ) : (

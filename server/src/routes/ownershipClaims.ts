@@ -10,7 +10,6 @@ import { authorizeRole } from "../auth/authorizeRole";
 
 const router: Router = Router();
 
-// Dodanie nowego zgłoszenia własności (dla użytkowników)
 router.post(
   "/",
   authenticateJWT,
@@ -18,7 +17,6 @@ router.post(
   createOwnershipClaim
 );
 
-// Pobranie wszystkich zgłoszeń własności (dla pracowników/adminów)
 router.get(
   "/",
   authenticateJWT,
@@ -26,7 +24,6 @@ router.get(
   getOwnershipClaims
 );
 
-// Aktualizacja statusu zgłoszenia (dla pracowników/adminów)
 router.post(
   "/:id",
   authenticateJWT,

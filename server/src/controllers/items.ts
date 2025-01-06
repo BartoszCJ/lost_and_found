@@ -18,7 +18,7 @@ export const getItems = async (req: Request, res: Response): Promise<void> => {
 
     res.json(items);
   } catch (error) {
-    console.error("Error fetching items:", error); // Loguj błąd
+    console.error("Error fetching items:", error); 
     res.status(500).json({ error: "Unable to fetch items." });
   }
 };
@@ -28,10 +28,10 @@ export const addItem = async (req: Request, res: Response): Promise<void> => {
     const { name, description, category, location_found, date_found, status } =
       req.body;
 
-    // Walidacja
+    
     if (!name || !category) {
       res.status(400).json({ error: "Nazwa i kategoria są wymagane." });
-      return; // Upewnij się, że kończysz działanie
+      return; 
     }
 
     let dateFoundValue: Date | null = null;
@@ -54,7 +54,7 @@ export const addItem = async (req: Request, res: Response): Promise<void> => {
       },
     });
 
-    res.status(201).json(newItem); // Wyślij odpowiedź
+    res.status(201).json(newItem); 
   } catch (error) {
     console.error("Error in addItem:", error);
     res.status(500).json({ error: "Unable to add item." });

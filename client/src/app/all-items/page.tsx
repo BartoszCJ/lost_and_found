@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -20,16 +22,13 @@ const AllItems = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Czekamy, aż AuthContext przestanie się ładować
     if (!isLoading) {
-      // Jeżeli użytkownik nie jest zalogowany – ustawiamy błąd i nie robimy fetch
       if (!isLoggedIn) {
         setError("Użytkownik nie jest zalogowany.");
         setLoading(false);
         return;
       }
 
-      // Gdy user jest zalogowany, pobieramy dane
       const fetchItems = async () => {
         try {
           const token = localStorage.getItem("token");
@@ -54,7 +53,6 @@ const AllItems = () => {
     }
   }, [isLoggedIn, isLoading]);
 
-  // Jeśli AuthContext wciąż się ładuje:
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -67,7 +65,6 @@ const AllItems = () => {
     );
   }
 
-  // Jeśli wciąż ładujemy same przedmioty:
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -80,7 +77,6 @@ const AllItems = () => {
     );
   }
 
-  // Jeśli pojawił się błąd (np. brak tokena, brak zalogowania, error z fetch):
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -95,7 +91,6 @@ const AllItems = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Możesz tu wstawić <Navbar /> jeśli chcesz */}
       <main className="flex-grow px-8 py-12 sm:px-20 bg-gray-50">
         <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg p-6">
           <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">

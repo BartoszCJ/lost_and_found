@@ -9,7 +9,6 @@ const AuthPage = () => {
 
   return (
     <div className="flex items-center justify-between min-h-screen bg-gray-100">
-      {/* Lewa część ekranu */}
       <div
         className={`w-1/2 h-screen p-8 shadow-2xl rounded-l-lg flex flex-col items-center justify-start transition-all duration-300 ${
           isLogin ? "bg-white" : "bg-gray-300 bg-opacity-50"
@@ -32,8 +31,6 @@ const AuthPage = () => {
           )}
 
       </div>
-
-      {/* Prawa część ekranu */}
       <div
         className={`w-1/2 h-screen p-8  shadow-2xl rounded-r-lg flex flex-col items-center justify-start transition-all duration-300 ${
           !isLogin ? "bg-white" : "bg-gray-300 bg-opacity-50"

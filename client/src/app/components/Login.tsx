@@ -30,13 +30,13 @@ const LoginUser = () => {
   //     errors.password = "Hasło musi mieć co najmniej 6 znaków.";
 
   //   setFieldErrors(errors);
-  //   return Object.keys(errors).length === 0; // Zwraca true, jeśli brak błędów
+  //   return Object.keys(errors).length === 0; 
   // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    // if (!validateFields()) return; // Zatrzymaj wysyłanie, jeśli są błędy
+    // if (!validateFields()) return; 
 
     setLoading(true);
 
@@ -53,7 +53,7 @@ const LoginUser = () => {
       }
 
       const { token } = await response.json();
-      login(token); // Wywołanie funkcji login, aby zaktualizować stan w AuthContext
+      login(token);
 
       router.push("/");
     } catch (err) {

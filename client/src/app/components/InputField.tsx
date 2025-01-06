@@ -9,7 +9,7 @@ interface InputFieldProps {
   inputStyle?: string;
   iconStyle?: string;
   error?: string;
-  showpasswordstrength?: boolean; // Opcjonalnie, jeśli chcemy wyświetlać siłę hasła
+  showpasswordstrength?: boolean; 
   [key: string]: any;
 }
 
@@ -25,7 +25,6 @@ const InputField: React.FC<InputFieldProps> = ({
   showpasswordstrength = false,
   ...props
 }) => {
-  // Funkcja do obliczania siły hasła
   const calculatePasswordStrength = (password: string): string => {
     if (password.length < 6) return "Słabe";
     if (password.match(/[A-Z]/) && password.match(/\d/) && password.length >= 8)
@@ -33,14 +32,13 @@ const InputField: React.FC<InputFieldProps> = ({
     return "Średnie";
   };
 
-  // Wyliczamy siłę hasła tylko, jeśli jest to pole hasła i ustawiono `showpasswordstrength
-  // `
+  
   const passwordStrength =
     secureTextEntry && showpasswordstrength && props.value
       ? calculatePasswordStrength(props.value)
       : "";
 
-  // Dynamiczne klasy CSS dla obramowania
+  
   const borderClass = error
     ? "border-red-500"
     : secureTextEntry && showpasswordstrength && props.value
@@ -76,7 +74,6 @@ const InputField: React.FC<InputFieldProps> = ({
         />
       </div>
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-      {/* Wskaźnik siły hasła */}
       {secureTextEntry && showpasswordstrength && props.value && (
         <p
           className={`text-sm mt-1 ${

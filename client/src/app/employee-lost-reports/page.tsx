@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 
@@ -34,29 +35,18 @@ interface Item {
 const EmployeeLostReports: React.FC = () => {
   const [reports, setReports] = useState<LostReport[]>([]);
   const [selectedReport, setSelectedReport] = useState<LostReport | null>(null);
-
-  // Nowy stan na wybrany przedmiot
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-
-  // Paginacja
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  // Filtrowanie statusu
   const [statusFilter, setStatusFilter] = useState<
     "all" | "pending" | "resolved" | "rejected"
   >("all");
-
-  // Lista wszystkich itemów
   const [allItems, setAllItems] = useState<Item[]>([]);
-  // Szukana fraza
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Stany pomocnicze
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // ------ FETCHOWANIE ZGŁOSZEŃ I ITEMÓW ------
   const fetchReports = async () => {
     try {
       setLoading(true);
@@ -68,7 +58,6 @@ const EmployeeLostReports: React.FC = () => {
         statusFilter !== "all" ? `status=${statusFilter}` : "";
       const url = `http://localhost:3001/api/lost-reports?${statusParam}&page=${page}&limit=${limit}`;
 
-      // 1) Pobierz zgłoszenia
       const res = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -80,7 +69,6 @@ const EmployeeLostReports: React.FC = () => {
       setPage(result.currentPage);
       setTotalPages(result.totalPages);
 
-      // 2) Pobierz itemy
       const itemsRes = await fetch("http://localhost:3001/api/items", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -96,13 +84,11 @@ const EmployeeLostReports: React.FC = () => {
     }
   };
 
-  // Wywołujemy fetch po zmianie filtra lub page
   useEffect(() => {
     fetchReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, statusFilter]);
 
-  // Kolor statusu
   const getStatusColorClass = (status: LostReport["status"]) => {
     switch (status) {
       case "pending":
@@ -116,25 +102,21 @@ const EmployeeLostReports: React.FC = () => {
     }
   };
 
-  // Klik w liście zgłoszeń
   const handleSelectReport = (report: LostReport) => {
     setSelectedReport(report);
-    setSelectedItem(null); // reset wybieranego itemu, bo zmieniamy raport
+    setSelectedItem(null);
   };
 
-  // Filtrowane przedmioty
   const filteredItems = allItems
     .filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter((item) => item.status !== "claimed");
 
-  // Klik w liście itemów – zaznacz item
   const handleSelectItem = (item: Item) => {
     setSelectedItem(item);
   };
 
-  // Zmiana filtra
   const handleFilterChange = (
     newFilter: "all" | "pending" | "resolved" | "rejected"
   ) => {
@@ -143,7 +125,6 @@ const EmployeeLostReports: React.FC = () => {
     setSelectedReport(null);
   };
 
-  // Paginate
   const handlePrevPage = () => {
     if (page > 1) {
       setPage(page - 1);
@@ -157,7 +138,6 @@ const EmployeeLostReports: React.FC = () => {
     }
   };
 
-  // Odrzucanie zgłoszenia
   const handleRejectReport = async () => {
     if (!selectedReport) return;
     try {
@@ -165,7 +145,7 @@ const EmployeeLostReports: React.FC = () => {
       const res = await fetch(
         `http://localhost:3001/api/lost-reports/${selectedReport.id}`,
         {
-          method: "PUT", // lub PATCH – zależnie od backendu
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -184,7 +164,6 @@ const EmployeeLostReports: React.FC = () => {
     }
   };
 
-  // Zatwierdź = przypisz wybrany item do raportu + zmień status na resolved
   const handleResolveAndAssign = async () => {
     if (!selectedReport) {
       alert("Najpierw wybierz zgłoszenie");
@@ -224,11 +203,9 @@ const EmployeeLostReports: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto mt-10 flex gap-4">
-      {/* LEWA KOLUMNA: LISTA ZGŁOSZEŃ + FILTRY + PAGINACJA */}
       <div className="w-1/2 bg-white shadow-md rounded-lg p-4">
         <h1 className="text-2xl font-bold mb-6">Zgłoszenia zagubienia</h1>
 
-        {/* FILTRY STATUSU */}
         <div className="flex gap-2 mb-4">
           <button
             onClick={() => handleFilterChange("all")}
@@ -270,7 +247,6 @@ const EmployeeLostReports: React.FC = () => {
           </button>
         </div>
 
-        {/* LISTA ZGŁOSZEŃ */}
         {reports.length === 0 ? (
           <p>Brak zgłoszeń w tej kategorii.</p>
         ) : (
@@ -300,7 +276,6 @@ const EmployeeLostReports: React.FC = () => {
           </ul>
         )}
 
-        {/* PAGINACJA */}
         <div className="flex justify-center items-center gap-4 mt-4">
           <button
             onClick={handlePrevPage}
@@ -322,7 +297,6 @@ const EmployeeLostReports: React.FC = () => {
         </div>
       </div>
 
-      {/* PRAWA KOLUMNA: SZCZEGÓŁY ZGŁOSZENIA + LISTA ITEMÓW */}
       <div className="w-1/2 bg-white shadow-md rounded-lg p-4">
         {selectedReport ? (
           <>
@@ -417,7 +391,6 @@ const EmployeeLostReports: React.FC = () => {
                           {item.description}
                         </p>
                       </div>
-                      {/* Tu można dodać np. miniaturę zdjęcia w przyszłości */}
                     </li>
                   ))}
                 </ul>

@@ -8,13 +8,13 @@ const Navbar = () => {
   const { isLoggedIn, role, isLoading, logout } = useAuth();
 
   if (isLoading) {
-    return null; // Nie renderuj nic, dopóki `AuthContext` się nie zainicjalizuje
+    return null; 
   }
 
   return (
     <nav className="w-full bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Logo / Nazwa Aplikacji */}
+      
         <div className="flex items-center">
           <Image
             width={32}

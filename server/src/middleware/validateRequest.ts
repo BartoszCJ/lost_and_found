@@ -8,9 +8,9 @@ export const validateRequest = (schema: ObjectSchema) => {
     if (error) {
       const errors = error.details.map((err) => err.message);
       res.status(400).json({ errors });
-      return; // Upewnij się, że funkcja zwraca `void` w przypadku błędu
+      return; 
     }
 
-    next(); // Przekazujemy kontrolę dalej
+    next(); 
   };
 };

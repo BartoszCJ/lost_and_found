@@ -12,7 +12,7 @@ const getBgVariantStyle = (variant: ButtonProps["bgVariant"]) => {
     case "outline":
       return "bg-transparent border border-neutral-300 hover:border-neutral-400";
     default:
-      return "bg-[#33b249] hover:bg-green-600"; // Domyślny kolor z efektem hover
+      return "bg-[#33b249] hover:bg-green-600"; 
   }
 };
 
@@ -27,7 +27,7 @@ const getTextVariantStyle = (variant: ButtonProps["textVariant"]) => {
     case "success":
       return "text-green-100";
     default:
-      return "text-white"; // Domyślny kolor tekstu
+      return "text-white"; 
   }
 };
 

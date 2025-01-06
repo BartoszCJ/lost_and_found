@@ -32,10 +32,15 @@ const ClaimForm: React.FC<ClaimFormProps> = ({ item, onClose }) => {
 
         alert("Claim submitted successfully!");
         onClose();
-    } catch (err) {
-        console.error("Error submitting claim:", err);
-        alert(err.message);
-    }
+    } catch (err: unknown) {
+      console.error("Error submitting claim:", err);
+  
+      if (err instanceof Error) {
+          alert(err.message);
+      } else {
+          alert("An unexpected error occurred.");
+      }
+  }
 };
 
   return (

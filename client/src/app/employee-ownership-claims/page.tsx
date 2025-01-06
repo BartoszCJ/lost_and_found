@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../components/CustomButton";
 
-// Przykładowy interfejs roszczenia
 interface OwnershipClaim {
   id: number;
   description: string;
@@ -25,7 +25,7 @@ interface OwnershipClaim {
 }
 
 const EmployeeOwnershipClaims = () => {
-  // ------- Kluczowe: definiujemy stany ------
+ 
   const [claims, setClaims] = useState<OwnershipClaim[]>([]);
   const [selectedClaim, setSelectedClaim] = useState<OwnershipClaim | null>(
     null
@@ -33,16 +33,15 @@ const EmployeeOwnershipClaims = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Paginacja i filtrowanie
+
   const [page, setPage] = useState(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [limit, setLimit] = useState(10);
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // Informacje zwrotne z serwera
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Definiujemy funkcję fetchClaims
   const fetchClaims = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -55,7 +54,7 @@ const EmployeeOwnershipClaims = () => {
         throw new Error("Błąd pobierania roszczeń");
       }
 
-      const result = await res.json(); // { data, currentPage, totalPages, ... }
+      const result = await res.json(); 
       setClaims(result.data);
       setCurrentPage(result.currentPage);
       setTotalPages(result.totalPages);
@@ -66,13 +65,13 @@ const EmployeeOwnershipClaims = () => {
     }
   };
 
-  // Wywołujemy fetch w useEffect przy zmianie page, limit, statusFilter
+  
   useEffect(() => {
     fetchClaims();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit, statusFilter]);
 
-  // Funkcja do aktualizacji statusu roszczenia
+ 
   const handleStatusChange = async (
     claim: OwnershipClaim,
     newStatus: "approved" | "rejected"
@@ -96,10 +95,10 @@ const EmployeeOwnershipClaims = () => {
         throw new Error("Błąd podczas aktualizacji roszczenia.");
       }
 
-      // Odśwież listę (lub zaktualizuj stan lokalnie)
+    
       fetchClaims();
 
-      // Ewentualnie, jeśli chcemy na żywo podmienić status zaznaczonego roszczenia:
+     
       if (selectedClaim && selectedClaim.id === claim.id) {
         setSelectedClaim({ ...selectedClaim, status: newStatus });
       }
@@ -121,9 +120,9 @@ const EmployeeOwnershipClaims = () => {
         Roszczenia własności
       </h1>
 
-      {/* Dwukolumnowy układ */}
+     
       <div className="flex gap-4">
-        {/* LEFT COLUMN: Lista roszczeń */}
+      
         <div className="w-1/2 bg-white shadow-md rounded-lg p-4 h-[70vh] overflow-y-auto">
           <h2 className="text-lg font-semibold mb-2">Lista roszczeń:</h2>
           {claims.length === 0 ? (
@@ -175,7 +174,7 @@ const EmployeeOwnershipClaims = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Szczegóły roszczenia + przedmiot */}
+      
         <div className="w-1/2 bg-white shadow-md rounded-lg p-4 h-[70vh] overflow-y-auto">
           {selectedClaim ? (
             <>
@@ -238,7 +237,7 @@ const EmployeeOwnershipClaims = () => {
                 </p>
               </div>
 
-              {/* Przyciski do akceptacji/odrzucenia */}
+      
               {selectedClaim.status === "pending" && (
                 <div className="flex gap-4 mt-4">
                   <button

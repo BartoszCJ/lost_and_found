@@ -7,22 +7,21 @@ import ownershipClaimsRoutes from "./routes/ownershipClaims";
 import cors from "cors";
 import { initializeItems, initializeLostReports, initializeOwnershipClaims, initializeUsers } from "../mock/initializeData"; 
 
-dotenv.config(); // Ładowanie zmiennych z pliku .env
+dotenv.config(); 
 
 const app: Application = express();
 const PORT = 3001;
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // Zezwalaj na dostęp tylko z frontendu
-    methods: ["GET", "POST", "PUT", "DELETE"], // Zezwalaj na określone metody HTTP
-    credentials: true, // Zezwól na przesyłanie ciasteczek
+    origin: "http://localhost:3000", 
+    methods: ["GET", "POST", "PUT", "DELETE"], 
+    credentials: true, 
   })
 );
-// Middleware
+
 app.use(express.json());
 
-// Routes
 app.use("/api/items", itemsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/ownership-claims", ownershipClaimsRoutes);

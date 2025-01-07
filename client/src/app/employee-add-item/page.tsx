@@ -14,7 +14,7 @@ const EmployeeAddItem: React.FC = () => {
     category: "",
     location_found: "",
     date_found: "",
-    status: "found", 
+    status: "Znaleziony",
   });
 
   const [error, setError] = useState("");
@@ -33,7 +33,6 @@ const EmployeeAddItem: React.FC = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
 
     if (!formData.name.trim()) {
       setError("Nazwa przedmiotu jest wymagana.");
@@ -73,7 +72,7 @@ const EmployeeAddItem: React.FC = () => {
         category: "",
         location_found: "",
         date_found: "",
-        status: "found",
+        status: "Znaleziony",
       });
     } catch (err: any) {
       setError(err.message);
@@ -155,9 +154,10 @@ const EmployeeAddItem: React.FC = () => {
             onChange={handleChange}
             className="w-full border p-2 rounded"
           >
-            <option value="found">found</option>
-            <option value="claimed">claimed</option>
-            <option value="archived">archived</option>
+            <option value="Znaleziony">Znaleziony</option>
+            <option value="Przypisany">Przypisany</option>
+            <option value="Zwrocony">Zwrocony</option>
+            <option value="Zarchiwizowany">Zarchiwizowany</option>
           </select>
         </div>
 

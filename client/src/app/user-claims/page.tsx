@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 interface Claim {
   id: number;
   description: string;
-  status: "pending" | "approved" | "rejected";
+  status: "Oczekuje" | "Zaakceptowane" | "Odrzucone";
   item: { name: string };
 }
 
@@ -55,17 +55,17 @@ const MyClaims = () => {
             <p className="text-gray-700">Opis: {claim.description}</p>
             <p
               className={`font-medium ${
-                claim.status === "approved"
+                claim.status === "Zaakceptowane"
                   ? "text-green-500"
-                  : claim.status === "rejected"
+                  : claim.status === "Odrzucone"
                   ? "text-red-500"
                   : "text-yellow-500"
               }`}
             >
               Status:{" "}
-              {claim.status === "pending"
+              {claim.status === "Oczekuje"
                 ? "W trakcie weryfikacji"
-                : claim.status === "approved"
+                : claim.status === "Zaakceptowane"
                 ? "Zatwierdzone"
                 : "Odrzucone"}
             </p>

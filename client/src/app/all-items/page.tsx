@@ -13,6 +13,11 @@ interface Item {
   location_found: string | null;
   date_found: string | null;
   status: string;
+  assignedTo?: {
+    id: number;
+    name: string;
+    email: string;
+  };
 }
 
 const AllItems = () => {
@@ -119,6 +124,9 @@ const AllItems = () => {
                   <th className="border border-gray-200 px-4 py-2 text-gray-800">
                     Data znalezienia
                   </th>
+                  <th className="border border-gray-200 px-4 py-2 text-gray-800">
+                    Przypisany do
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -146,6 +154,11 @@ const AllItems = () => {
                       {item.date_found
                         ? new Date(item.date_found).toLocaleDateString()
                         : "Brak danych"}
+                    </td>
+                    <td className="border border-gray-200 px-4 py-2 text-gray-700">
+                      {item.assignedTo
+                        ? `${item.assignedTo.name} (${item.assignedTo.email})`
+                        : "Nieprzypisany"}
                     </td>
                   </tr>
                 ))}

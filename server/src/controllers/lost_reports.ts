@@ -22,7 +22,7 @@ export const createLostReport = async (
         description,
         location_lost,
         date_lost: new Date(date_lost),
-        status: "pending",
+        status: "Oczekuje",
         date_reported: new Date(),
       },
     });
@@ -117,11 +117,21 @@ export const assignItemToLostReport = async (
     const { id } = req.params;
     const { itemId } = req.body;
 
+    if (!id || !itemId) {
+      res.status(400).json({ error: "Report ID and Item ID are required." });
+      return;
+    }
+
     const report = await prisma.lost_reports.findUnique({
       where: { id: Number(id) },
     });
     if (!report) {
       res.status(404).json({ error: "Lost report not found." });
+      return;
+    }
+
+    if (report.item_id) {
+      res.status(400).json({ error: "This report already has an assigned item." });
       return;
     }
 
@@ -133,26 +143,53 @@ export const assignItemToLostReport = async (
       return;
     }
 
+    if (item.status === "Przypisany") {
+      res.status(400).json({ error: "This item is already assigned to another report." });
+      return;
+    }
+
     await prisma.$transaction(async (tx) => {
       await tx.lost_reports.update({
         where: { id: report.id },
         data: {
           item_id: item.id,
-          status: "resolved",
+          status: "Zaakceptowane",
         },
       });
-
+    
       await tx.items.update({
         where: { id: item.id },
-        data: { status: "claimed" },
+        data: {
+          status: "Przypisany",
+          assigned_to: report.user_id,
+        },
       });
     });
-
+    
     const updatedReport = await prisma.lost_reports.findUnique({
-      where: { id: Number(id) },
-      include: { user: true, item: true },
+      where: { id: report.id },
+      include: {
+        item: {
+          include: {
+            assignedTo: { 
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
-
+    
     res.json(updatedReport);
   } catch (error) {
     console.error("Error in assignItemToLostReport:", error);

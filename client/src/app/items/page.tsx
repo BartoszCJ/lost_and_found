@@ -36,7 +36,7 @@ export default function Items() {
   };
 
   const filteredItems = items
-    .filter((item) => item.status !== "claimed")
+    .filter((item) => item.status !== "Przypisany")
     .filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );

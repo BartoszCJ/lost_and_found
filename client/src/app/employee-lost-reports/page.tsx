@@ -9,7 +9,7 @@ interface LostReport {
   location_lost: string;
   date_lost: string;
   date_reported: string;
-  status: "pending" | "resolved" | "rejected";
+  status: "Oczekuje" | "Zaakceptowane" | "Odrzucone";
   item_id: number | null;
   user: {
     id: number;
@@ -39,7 +39,7 @@ const EmployeeLostReports: React.FC = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [statusFilter, setStatusFilter] = useState<
-    "all" | "pending" | "resolved" | "rejected"
+    "all" | "Oczekuje" | "Zaakceptowane" | "Odrzucone"
   >("all");
   const [allItems, setAllItems] = useState<Item[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -91,11 +91,11 @@ const EmployeeLostReports: React.FC = () => {
 
   const getStatusColorClass = (status: LostReport["status"]) => {
     switch (status) {
-      case "pending":
+      case "Oczekuje":
         return "text-yellow-600";
-      case "resolved":
+      case "Zaakceptowane":
         return "text-green-600";
-      case "rejected":
+      case "Odrzucone":
         return "text-red-600";
       default:
         return "text-gray-800";
@@ -111,14 +111,14 @@ const EmployeeLostReports: React.FC = () => {
     .filter((item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((item) => item.status !== "claimed");
+    .filter((item) => item.status !== "Przypisany");
 
   const handleSelectItem = (item: Item) => {
     setSelectedItem(item);
   };
 
   const handleFilterChange = (
-    newFilter: "all" | "pending" | "resolved" | "rejected"
+    newFilter: "all" | "Oczekuje" | "Zaakceptowane" | "Odrzucone"
   ) => {
     setStatusFilter(newFilter);
     setPage(1);
@@ -150,7 +150,7 @@ const EmployeeLostReports: React.FC = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ status: "rejected" }),
+          body: JSON.stringify({ status: "Odrzucone" }),
         }
       );
       if (!res.ok) {
@@ -216,9 +216,9 @@ const EmployeeLostReports: React.FC = () => {
             Wszystkie
           </button>
           <button
-            onClick={() => handleFilterChange("pending")}
+            onClick={() => handleFilterChange("Oczekuje")}
             className={`px-3 py-1 rounded ${
-              statusFilter === "pending"
+              statusFilter === "Oczekuje"
                 ? "bg-green-500 text-white"
                 : "bg-gray-200"
             }`}
@@ -226,19 +226,19 @@ const EmployeeLostReports: React.FC = () => {
             Oczekujące
           </button>
           <button
-            onClick={() => handleFilterChange("resolved")}
+            onClick={() => handleFilterChange("Zaakceptowane")}
             className={`px-3 py-1 rounded ${
-              statusFilter === "resolved"
+              statusFilter === "Zaakceptowane"
                 ? "bg-green-500 text-white"
                 : "bg-gray-200"
             }`}
           >
-            Zatwierdzone
+            Zaakceptowane
           </button>
           <button
-            onClick={() => handleFilterChange("rejected")}
+            onClick={() => handleFilterChange("Odrzucone")}
             className={`px-3 py-1 rounded ${
-              statusFilter === "rejected"
+              statusFilter === "Odrzucone"
                 ? "bg-green-500 text-white"
                 : "bg-gray-200"
             }`}
@@ -342,7 +342,7 @@ const EmployeeLostReports: React.FC = () => {
             ) : (
               <p className="mt-4">Brak przypisanego przedmiotu.</p>
             )}
-            {selectedReport.status === "pending" && (
+            {selectedReport.status === "Oczekuje" && (
               <div className="flex gap-3 mt-3">
                 <button
                   onClick={handleRejectReport}

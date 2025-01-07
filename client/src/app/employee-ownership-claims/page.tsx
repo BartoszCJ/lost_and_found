@@ -6,7 +6,7 @@ import CustomButton from "../components/CustomButton";
 interface OwnershipClaim {
   id: number;
   description: string;
-  status: "pending" | "approved" | "rejected";
+  status: "Oczekuje" | "Zaakceptowane" | "Odrzucone";
   date_submitted: string;
   item: {
     id: number;
@@ -25,14 +25,12 @@ interface OwnershipClaim {
 }
 
 const EmployeeOwnershipClaims = () => {
- 
   const [claims, setClaims] = useState<OwnershipClaim[]>([]);
   const [selectedClaim, setSelectedClaim] = useState<OwnershipClaim | null>(
     null
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
 
   const [page, setPage] = useState(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,7 +52,7 @@ const EmployeeOwnershipClaims = () => {
         throw new Error("Błąd pobierania roszczeń");
       }
 
-      const result = await res.json(); 
+      const result = await res.json();
       setClaims(result.data);
       setCurrentPage(result.currentPage);
       setTotalPages(result.totalPages);
@@ -65,16 +63,14 @@ const EmployeeOwnershipClaims = () => {
     }
   };
 
-  
   useEffect(() => {
     fetchClaims();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit, statusFilter]);
 
- 
   const handleStatusChange = async (
     claim: OwnershipClaim,
-    newStatus: "approved" | "rejected"
+    newStatus: "Zaakceptowane" | "Odrzucone"
   ) => {
     try {
       const token = localStorage.getItem("token");
@@ -95,10 +91,8 @@ const EmployeeOwnershipClaims = () => {
         throw new Error("Błąd podczas aktualizacji roszczenia.");
       }
 
-    
       fetchClaims();
 
-     
       if (selectedClaim && selectedClaim.id === claim.id) {
         setSelectedClaim({ ...selectedClaim, status: newStatus });
       }
@@ -120,9 +114,7 @@ const EmployeeOwnershipClaims = () => {
         Roszczenia własności
       </h1>
 
-     
       <div className="flex gap-4">
-      
         <div className="w-1/2 bg-white shadow-md rounded-lg p-4 h-[70vh] overflow-y-auto">
           <h2 className="text-lg font-semibold mb-2">Lista roszczeń:</h2>
           {claims.length === 0 ? (
@@ -147,9 +139,9 @@ const EmployeeOwnershipClaims = () => {
                   </p>
                   <p
                     className={`text-sm ${
-                      claim.status === "approved"
+                      claim.status === "Zaakceptowane"
                         ? "text-green-600"
-                        : claim.status === "rejected"
+                        : claim.status === "Odrzucone"
                         ? "text-red-600"
                         : "text-yellow-600"
                     }`}
@@ -162,7 +154,7 @@ const EmployeeOwnershipClaims = () => {
           )}{" "}
           <div className="flex items-center gap-2 mt-5">
             <CustomButton
-              onClick={() => setStatusFilter("pending")}
+              onClick={() => setStatusFilter("Oczekuje")}
               title="Oczekujące"
               className="w-auto px-4 py-2"
             />
@@ -174,7 +166,6 @@ const EmployeeOwnershipClaims = () => {
           </div>
         </div>
 
-      
         <div className="w-1/2 bg-white shadow-md rounded-lg p-4 h-[70vh] overflow-y-auto">
           {selectedClaim ? (
             <>
@@ -185,9 +176,9 @@ const EmployeeOwnershipClaims = () => {
                 <span className="font-semibold">Status:</span>{" "}
                 <span
                   className={
-                    selectedClaim.status === "approved"
+                    selectedClaim.status === "Zaakceptowane"
                       ? "text-green-600"
-                      : selectedClaim.status === "rejected"
+                      : selectedClaim.status === "Odrzucone"
                       ? "text-red-600"
                       : "text-yellow-600"
                   }
@@ -237,13 +228,12 @@ const EmployeeOwnershipClaims = () => {
                 </p>
               </div>
 
-      
-              {selectedClaim.status === "pending" && (
+              {selectedClaim.status === "Oczekuje" && (
                 <div className="flex gap-4 mt-4">
                   <button
                     className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                     onClick={() =>
-                      handleStatusChange(selectedClaim, "approved")
+                      handleStatusChange(selectedClaim, "Zaakceptowane")
                     }
                   >
                     Zatwierdź
@@ -251,7 +241,7 @@ const EmployeeOwnershipClaims = () => {
                   <button
                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                     onClick={() =>
-                      handleStatusChange(selectedClaim, "rejected")
+                      handleStatusChange(selectedClaim, "Odrzucone")
                     }
                   >
                     Odrzuć

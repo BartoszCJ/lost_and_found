@@ -24,7 +24,7 @@ export const createOwnershipClaim = async (
         user_id: userId,
         item_id,
         description,
-        status: "pending",
+        status: "Oczekuje",
         date_submitted: new Date(),
       },
     });
@@ -40,7 +40,7 @@ export const getOwnershipClaims = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const statusFilter = req.query.status as string | undefined; // "pending", "approved", "rejected", etc.
+    const statusFilter = req.query.status as string | undefined;
 
     const skip = (page - 1) * limit;
 
@@ -81,18 +81,35 @@ export const updateOwnershipClaim = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const employeeId = (req as any).user.id; 
+    const employeeId = (req as any).user.id;
+
+    if (!["Oczekuje", "Zaakceptowane", "Odrzucone"].includes(status)) {
+      return res.status(400).json({ error: "Invalid status value." });
+    }
 
     const currentClaim = await prisma.ownership_claims.findUnique({
       where: { id: Number(id) },
     });
 
     if (!currentClaim) {
-      return res.status(404).json({ error: "Claim not found" });
+      return res.status(404).json({ error: "Claim not found." });
+    }
+
+    if (status === "Zaakceptowane" && !currentClaim.item_id) {
+      return res.status(400).json({ error: "No item associated with this claim." });
+    }
+
+    const item = await prisma.items.findUnique({
+      where: { id: currentClaim.item_id },
+    });
+
+    if (status === "Zaakceptowane" && !item) {
+      return res.status(404).json({ error: "Associated item not found." });
     }
 
     await prisma.$transaction(async (tx) => {
-      const updatedClaim = await tx.ownership_claims.update({
+
+      await tx.ownership_claims.update({
         where: { id: Number(id) },
         data: {
           status,
@@ -100,29 +117,48 @@ export const updateOwnershipClaim = async (req: Request, res: Response) => {
         },
       });
 
-      if (status === "approved") {
+      if (status === "Zaakceptowane") {
         await tx.items.update({
           where: { id: currentClaim.item_id },
-          data: { status: "claimed" },
+          data: {
+            status: "Przypisany",
+            assigned_to: currentClaim.user_id, 
+          },
         });
       }
-
-     
     });
 
     const finalClaim = await prisma.ownership_claims.findUnique({
       where: { id: Number(id) },
       include: {
-        item: true,
+        item: {
+          include: {
+            assignedTo: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        verifiedBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
     });
 
     res.json(finalClaim);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error updating ownership claim" });
+    console.error("Error updating ownership claim:", error);
+    res.status(500).json({ error: "Error updating ownership claim." });
   }
 };
+
 
 export const getUserOwnershipClaims = async (
   req: Request,

@@ -10,7 +10,7 @@ export interface Item {
   name: string;
   description: string;
   category: string;
-  status: "unconfirmed" | "found" | "claimed";
+  status: "Zwrocony" | "Znaleziony" | "Przypisany" | "Zarchiwizowany";
   dateFound: string;
 }
 

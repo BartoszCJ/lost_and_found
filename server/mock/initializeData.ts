@@ -75,7 +75,7 @@ export const initializeItems = async () => {
         description: "Mały portfel z dokumentami i gotówką w środku.",
         category: "Akcesoria",
         location_found: "Park Miejski",
-        status: "found",
+        status: "Znaleziony",
       },
       {
         id: 2,
@@ -83,7 +83,7 @@ export const initializeItems = async () => {
         description: "Pierścionek z wygrawerowanymi inicjałami.",
         category: "Biżuteria",
         location_found: "Kawiarnia Starówka",
-        status: "found",
+        status: "Znaleziony",
       },
       {
         id: 3,
@@ -91,7 +91,7 @@ export const initializeItems = async () => {
         description: "Plecak z książkami i laptopem w środku.",
         category: "Plecaki",
         location_found: "Biblioteka Główna",
-        status: "claimed",
+        status: "Przypisany",
       },
     ];
 
@@ -125,10 +125,10 @@ export const initializeLostReports = async () => {
 
     const lostReports = [
       {
-        user_id: user1.id, // Poprawne przypisanie ID użytkownika
+        user_id: user1.id,
         name: "Portfel",
         date_reported: new Date().toISOString(),
-        status: "pending",
+        status: "Oczekuje",
         description: "Portfel z czarnej skóry",
         date_lost: new Date("2000-12-22"),
         location_lost: "Sala 34",
@@ -137,7 +137,7 @@ export const initializeLostReports = async () => {
         user_id: user2.id,
         name: "Pierścionek",
         date_reported: new Date().toISOString(),
-        status: "pending",
+        status: "Oczekuje",
         description: "Srebrny pierścionek",
         date_lost: new Date("1000-12-22"),
         location_lost: "Sala 100 pod krzesłem obok okna",
@@ -180,14 +180,14 @@ export const initializeOwnershipClaims = async () => {
         user_id: user1.id,
         description:
           "Ten portfel należy do mnie, zgubiłem go w Parku Miejskim.",
-        status: "pending",
+        status: "Oczekuje",
         date_submitted: new Date().toISOString(),
       },
       {
         item_id: 2,
         user_id: user2.id,
         description: "Pamiątka rodzinna, pierścionek z inicjałami po babci.",
-        status: "approved",
+        status: "Oczekuje",
         date_submitted: new Date().toISOString(),
       },
     ];

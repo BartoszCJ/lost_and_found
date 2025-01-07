@@ -6,7 +6,7 @@ interface Report {
   id: number;
   name: string;
   description: string;
-  status: "pending" | "resolved" | "rejected";
+  status: "Oczekuje" | "Zaakceptowane" | "Odrzucone";
   date_found: string | null;
 }
 
@@ -77,16 +77,16 @@ const UserLostReports = () => {
               </h2>
               <span
                 className={`px-3 py-1 text-sm rounded ${
-                  report.status === "resolved"
+                  report.status === "Zaakceptowane"
                     ? "bg-green-200 text-green-800"
-                    : report.status === "rejected"
+                    : report.status === "Odrzucone"
                     ? "bg-red-200 text-red-800"
                     : "bg-yellow-200 text-yellow-800"
                 }`}
               >
-                {report.status === "pending"
-                  ? "W trakcie"
-                  : report.status === "resolved"
+                {report.status === "Oczekuje"
+                  ? "W trakcie realizacji"
+                  : report.status === "Zaakceptowane"
                   ? "Zatwierdzone"
                   : "Odrzucone"}
               </span>

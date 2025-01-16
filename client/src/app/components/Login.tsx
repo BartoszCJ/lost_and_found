@@ -30,13 +30,13 @@ const LoginUser = () => {
       errors.password = "Hasło musi mieć co najmniej 6 znaków.";
 
     setFieldErrors(errors);
-    return Object.keys(errors).length === 0; 
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-     if (!validateFields()) return; 
+    if (!validateFields()) return;
 
     setLoading(true);
 
@@ -72,7 +72,6 @@ const LoginUser = () => {
       onSubmit={handleSubmit}
       className="space-y-7 bg-white p-8 rounded-lg w-full max-w-md mx-auto pr"
     >
-      WALIDACJA OFF, na serwie też
       {error && <p className="text-red-500">{error}</p>}
       <InputField
         label="Email"

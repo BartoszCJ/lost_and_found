@@ -39,7 +39,6 @@ export interface LoginResponse {
   token: string;
 }
 
-// types/type.ts
 export interface InputFieldProps {
   label?: string;
   labelStyle?: string;
@@ -48,7 +47,7 @@ export interface InputFieldProps {
   containerStyle?: string;
   inputStyle?: string;
   iconStyle?: string;
-  [key: string]: unknown; // Dodatkowe właściwości
+  [key: string]: unknown; 
 }
 
 export interface ButtonProps {

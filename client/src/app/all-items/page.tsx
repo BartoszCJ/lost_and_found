@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../components/AuthContext"; // Import kontekstu
+import { useAuth } from "../components/AuthContext"; 
 
 interface Item {
   id: number;

@@ -60,6 +60,7 @@ model lost_reports {
   date_lost    DateTime @default(now()) 
   status        ReportStatus  
   date_reported DateTime @default(now())
+  
 }
 
 

@@ -105,24 +105,6 @@ export const updateUserRole = async (req: Request, res: Response) => {
   }
 };
 
-export const blockUser = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { isBlocked } = req.body;
-
-    const updatedUser = await prisma.users.update({
-      where: { id: Number(id) },
-      data: {},
-      select: { id: true, name: true, email: true },
-    });
-
-    res.json(updatedUser);
-  } catch (error) {
-    console.error("Error blocking user:", error);
-    res.status(500).json({ error: "Cannot block/unblock user." });
-  }
-};
-
 
 export const addEmployee = async (
   req: Request,

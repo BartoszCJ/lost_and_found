@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import prisma from "../src/prisma";
+import { ClaimStatus, ItemStatus, ReportStatus } from "@prisma/client";
 
 export const initializeUsers = async () => {
   try {
@@ -75,7 +76,7 @@ export const initializeItems = async () => {
         description: "Mały portfel z dokumentami i gotówką w środku.",
         category: "Akcesoria",
         location_found: "Park Miejski",
-        status: "Znaleziony",
+        status: ItemStatus.Znaleziony,
       },
       {
         id: 2,
@@ -83,7 +84,7 @@ export const initializeItems = async () => {
         description: "Pierścionek z wygrawerowanymi inicjałami.",
         category: "Biżuteria",
         location_found: "Kawiarnia Starówka",
-        status: "Znaleziony",
+        status: ItemStatus.Znaleziony,
       },
       {
         id: 3,
@@ -91,7 +92,7 @@ export const initializeItems = async () => {
         description: "Plecak z książkami i laptopem w środku.",
         category: "Plecaki",
         location_found: "Biblioteka Główna",
-        status: "Przypisany",
+        status: ItemStatus.Znaleziony,
       },
     ];
 
@@ -128,7 +129,7 @@ export const initializeLostReports = async () => {
         user_id: user1.id,
         name: "Portfel",
         date_reported: new Date().toISOString(),
-        status: "Oczekuje",
+        status: ReportStatus.Oczekuje,
         description: "Portfel z czarnej skóry",
         date_lost: new Date("2000-12-22"),
         location_lost: "Sala 34",
@@ -137,7 +138,7 @@ export const initializeLostReports = async () => {
         user_id: user2.id,
         name: "Pierścionek",
         date_reported: new Date().toISOString(),
-        status: "Oczekuje",
+        status: ReportStatus.Oczekuje,
         description: "Srebrny pierścionek",
         date_lost: new Date("1000-12-22"),
         location_lost: "Sala 100 pod krzesłem obok okna",
@@ -180,14 +181,14 @@ export const initializeOwnershipClaims = async () => {
         user_id: user1.id,
         description:
           "Ten portfel należy do mnie, zgubiłem go w Parku Miejskim.",
-        status: "Oczekuje",
+        status: ClaimStatus.Oczekuje,
         date_submitted: new Date().toISOString(),
       },
       {
         item_id: 2,
         user_id: user2.id,
         description: "Pamiątka rodzinna, pierścionek z inicjałami po babci.",
-        status: "Oczekuje",
+        status: ClaimStatus.Oczekuje,
         date_submitted: new Date().toISOString(),
       },
     ];

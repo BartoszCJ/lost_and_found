@@ -11,32 +11,32 @@ const LoginUser = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  // const [fieldErrors, setFieldErrors] = useState<{
-  //   email?: string;
-  //   password?: string;
-  // }>({});
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  // const validateFields = () => {
-  //   const errors: { email?: string; password?: string } = {};
-  //   if (!email.trim()) errors.email = "Email jest wymagany.";
-  //   else if (!/^\S+@\S+\.\S+$/.test(email))
-  //     errors.email = "Podaj poprawny email.";
+  const validateFields = () => {
+    const errors: { email?: string; password?: string } = {};
+    if (!email.trim()) errors.email = "Email jest wymagany.";
+    else if (!/^\S+@\S+\.\S+$/.test(email))
+      errors.email = "Podaj poprawny email.";
 
-  //   if (!password.trim()) errors.password = "Hasło jest wymagane.";
-  //   else if (password.length < 4)
-  //     errors.password = "Hasło musi mieć co najmniej 6 znaków.";
+    if (!password.trim()) errors.password = "Hasło jest wymagane.";
+    else if (password.length < 4)
+      errors.password = "Hasło musi mieć co najmniej 6 znaków.";
 
-  //   setFieldErrors(errors);
-  //   return Object.keys(errors).length === 0; 
-  // };
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0; 
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    // if (!validateFields()) return; 
+     if (!validateFields()) return; 
 
     setLoading(true);
 
@@ -83,7 +83,7 @@ const LoginUser = () => {
         }
         placeholder="Wpisz swój email"
         containerStyle="mb-4"
-        // error={fieldErrors.email}
+        error={fieldErrors.email}
       />
       <InputField
         label="Hasło"
@@ -95,7 +95,7 @@ const LoginUser = () => {
         placeholder="Wpisz swoje hasło"
         secureTextEntry
         containerStyle="mb-4"
-        // error={fieldErrors.password}
+        error={fieldErrors.password}
       />
       <div className="pr-5 pl-5 pt-5">
         <CustomButton

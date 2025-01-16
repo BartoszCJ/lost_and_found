@@ -68,29 +68,6 @@ const AdminPanel: React.FC = () => {
     }
   };
 
-  const handleBlockUser = async (userId: number, block: boolean) => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(
-        `http://localhost:3001/api/users/${userId}/block`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ isBlocked: block }),
-        }
-      );
-      if (!res.ok) {
-        throw new Error("Nie udało się zmienić blokady użytkownika.");
-      }
-      await fetchUsers();
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
   const handleAddEmployee = async () => {
     if (
       !newEmployeeEmail.trim() ||
@@ -201,7 +178,6 @@ const AdminPanel: React.FC = () => {
                 <th className="border border-gray-200 px-4 py-2">Imię</th>
                 <th className="border border-gray-200 px-4 py-2">Email</th>
                 <th className="border border-gray-200 px-4 py-2">Rola</th>
-                <th className="border border-gray-200 px-4 py-2">Blokada</th>
                 <th className="border border-gray-200 px-4 py-2">Akcje</th>
               </tr>
             </thead>
@@ -224,18 +200,10 @@ const AdminPanel: React.FC = () => {
                       <option value="admin">admin</option>
                     </select>
                   </td>
-                  <td className="border border-gray-200 px-4 py-2">
-                    {u.isBlocked ? "TAK" : "NIE"}
-                  </td>
-                  <td className="border border-gray-200 px-4 py-2 space-x-2">
+
+                  <td className="border border-gray-200 px-4 py-2 ">
                     <button
-                      className="px-2 py-1 bg-yellow-400 text-white rounded"
-                      onClick={() => handleBlockUser(u.id, !u.isBlocked)}
-                    >
-                      {u.isBlocked ? "Odblokuj" : "Zablokuj"}
-                    </button>
-                    <button
-                      className="px-2 py-1 bg-red-500 text-white rounded"
+                      className="px-2 py-1 bg-red-500 text-white rounded items-center"
                       onClick={() => handleDeleteUser(u.id)}
                     >
                       Usuń

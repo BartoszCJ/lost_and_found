@@ -112,12 +112,6 @@ const Navbar = () => {
               >
                 Wszystkie przedmioty
               </Link>
-              <Link
-                href="/"
-                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
-              >
-                Admin panel
-              </Link>
             </>
           )}
         </div>

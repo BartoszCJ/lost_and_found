@@ -5,8 +5,12 @@ import { authorizeRole } from "../auth/authorizeRole";
 
 const router: Router = Router();
 
-
-router.get("/", authenticateJWT, authorizeRole(["employee", "user"]), getItems);
+router.get(
+  "/",
+  authenticateJWT,
+  authorizeRole(["employee", "user", "admin"]),
+  getItems
+);
 router.post("/", authenticateJWT, authorizeRole(["employee"]), addItem);
 
 export default router;

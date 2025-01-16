@@ -30,7 +30,7 @@ export const registerUser = async (
         name,
         email,
         password: hashedPassword,
-        role: "user", 
+        role: "user",
       },
     });
 
@@ -52,14 +52,12 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-   
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       res.status(401).json({ error: "Invalid email or password" });
       return;
     }
 
-   
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
@@ -72,17 +70,14 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-
     const users = await prisma.users.findMany({
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
-      
       },
     });
     res.json(users);
@@ -92,11 +87,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-
 export const updateUserRole = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { role } = req.body; 
+    const { role } = req.body;
 
     const updatedUser = await prisma.users.update({
       where: { id: Number(id) },
@@ -111,22 +105,16 @@ export const updateUserRole = async (req: Request, res: Response) => {
   }
 };
 
-
 export const blockUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { isBlocked } = req.body; 
+    const { isBlocked } = req.body;
 
-   
     const updatedUser = await prisma.users.update({
       where: { id: Number(id) },
-      data: {
-      
-      },
+      data: {},
       select: { id: true, name: true, email: true },
     });
-
-   
 
     res.json(updatedUser);
   } catch (error) {
@@ -136,52 +124,61 @@ export const blockUser = async (req: Request, res: Response) => {
 };
 
 
-export const resetUserPassword = async (req: Request, res: Response) => {
+export const addEmployee = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const { id } = req.params;
+    const { name, email, password } = req.body;
 
-    
-    const newPasswordPlain = "newPassword123";
-    
-    await prisma.users.update({
-      where: { id: Number(id) },
-      data: {
-      
-      },
-    });
+    if (!name || !email || !password) {
+      res
+        .status(400)
+        .json({ error: "Name, email, and password are required." });
+      return;
+    }
 
-   
-    res.json({ message: "Password reset successfully (example)." });
+    const existingUser = await prisma.users.findUnique({ where: { email } });
+    const hashed = await bcrypt.hash(password, 10);
+
+    if (existingUser) {
+      const updated = await prisma.users.update({
+        where: { id: existingUser.id },
+        data: {
+          name,
+          role: "employee",
+          password: hashed,
+        },
+      });
+      res.json({ message: "Existing user updated to employee", user: updated });
+    } else {
+      const created = await prisma.users.create({
+        data: {
+          name,
+          email,
+          password: hashed,
+          role: "employee",
+        },
+      });
+      res.status(201).json({ message: "New employee created", user: created });
+    }
   } catch (error) {
-    console.error("Error resetting password:", error);
-    res.status(500).json({ error: "Cannot reset password." });
+    console.error("Error adding employee:", error);
+    res.status(500).json({ error: "Cannot add employee" });
   }
 };
 
-
-export const addEmployee = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const { email } = req.body;
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
-    }
+    const { id } = req.params;
 
-
-    const user = await prisma.users.findUnique({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
-    }
-
-  
-    const updated = await prisma.users.update({
-      where: { id: user.id },
-      data: { role: "employee" },
-      select: { id: true, name: true, email: true, role: true },
+    await prisma.users.delete({
+      where: { id: Number(id) },
     });
 
-    res.json(updated);
+    res.json({ message: "User deleted successfully" });
   } catch (error) {
-    console.error("Error adding employee:", error);
-    res.status(500).json({ error: "Cannot add employee." });
+    console.error("Error deleting user:", error);
+    res.status(500).json({ error: "Cannot delete user." });
   }
 };

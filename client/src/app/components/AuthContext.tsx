@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState<string>("guest");
   const [isLoading, setIsLoading] = useState(true);
-  const [token, setToken] = useState<string | null>(null); 
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   const isTokenExpired = (exp: number) => Date.now() >= exp * 1000;
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const getToken = () => token; 
+  const getToken = () => token;
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const decoded = jwtDecode<TokenPayload>(storedToken);
         if (!decoded.exp || !isTokenExpired(decoded.exp)) {
-          setToken(storedToken); 
+          setToken(storedToken);
           setIsLoggedIn(true);
           setRole(decoded.role);
         } else {

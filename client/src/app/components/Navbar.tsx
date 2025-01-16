@@ -8,13 +8,12 @@ const Navbar = () => {
   const { isLoggedIn, role, isLoading, logout } = useAuth();
 
   if (isLoading) {
-    return null; 
+    return null;
   }
 
   return (
     <nav className="w-full bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      
         <div className="flex items-center">
           <Image
             width={32}
@@ -108,22 +107,10 @@ const Navbar = () => {
                 Users
               </Link>
               <Link
-                href="/"
+                href="/all-items"
                 className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
               >
-                Admin panel
-              </Link>
-              <Link
-                href="/"
-                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
-              >
-                Admin panel
-              </Link>
-              <Link
-                href="/"
-                className="text-gray-600 hover:text-green-600 font-medium transition duration-300"
-              >
-                Admin panel
+                Wszystkie przedmioty
               </Link>
               <Link
                 href="/"

@@ -7,13 +7,14 @@ interface User {
   name: string;
   email: string;
   role: "user" | "employee" | "admin";
-  isBlocked?: boolean; 
 }
-
 
 const AdminPanel: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
+  const [newEmployeePassword, setNewEmployeePassword] = useState("");
+  const [newEmployeeName, setNewEmployeeName] = useState("");
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -90,44 +91,58 @@ const AdminPanel: React.FC = () => {
     }
   };
 
-  const handleResetPassword = async (userId: number) => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(
-        `http://localhost:3001/api/users/${userId}/reset-password`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!res.ok) {
-        throw new Error("Nie udało się zresetować hasła.");
-      }
-      alert("Hasło zostało zresetowane (np. wysłane mailem).");
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
   const handleAddEmployee = async () => {
-    if (!newEmployeeEmail.trim()) return;
+    if (
+      !newEmployeeEmail.trim() ||
+      !newEmployeePassword.trim() ||
+      !newEmployeeName.trim()
+    ) {
+      alert("Podaj nazwę, email i hasło");
+      return;
+    }
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:3001/api/employees", {
+      const res = await fetch("http://localhost:3001/api/users/employees", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ email: newEmployeeEmail }),
+        body: JSON.stringify({
+          email: newEmployeeEmail,
+          password: newEmployeePassword,
+          name: newEmployeeName,
+        }),
       });
       if (!res.ok) {
         throw new Error("Nie udało się dodać pracownika.");
       }
       alert("Pracownik został dodany.");
+      setNewEmployeeName("");
       setNewEmployeeEmail("");
+      setNewEmployeePassword("");
+      fetchUsers();
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  const handleDeleteUser = async (userId: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:3001/api/users/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Nie udało się usunąć użytkownika.");
+      }
+      alert("Użytkownik został usunięty.");
       fetchUsers();
     } catch (err: any) {
       alert(err.message);
@@ -145,11 +160,25 @@ const AdminPanel: React.FC = () => {
         <h2 className="text-xl font-semibold mb-2">Dodaj nowego pracownika:</h2>
         <div className="flex space-x-2">
           <input
+            type="nazwa"
+            className="border p-2"
+            placeholder="Nazwa pracownika"
+            value={newEmployeeName}
+            onChange={(e) => setNewEmployeeName(e.target.value)}
+          />
+          <input
             type="email"
-            className="border p-2 w-64"
+            className="border p-2"
             placeholder="Email pracownika"
             value={newEmployeeEmail}
             onChange={(e) => setNewEmployeeEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            className="border p-2"
+            placeholder="Hasło pracownika"
+            value={newEmployeePassword}
+            onChange={(e) => setNewEmployeePassword(e.target.value)}
           />
           <button
             onClick={handleAddEmployee}
@@ -185,7 +214,6 @@ const AdminPanel: React.FC = () => {
                     {u.email}
                   </td>
                   <td className="border border-gray-200 px-4 py-2">
-                 
                     <select
                       value={u.role}
                       onChange={(e) => handleChangeRole(u.id, e.target.value)}
@@ -208,9 +236,9 @@ const AdminPanel: React.FC = () => {
                     </button>
                     <button
                       className="px-2 py-1 bg-red-500 text-white rounded"
-                      onClick={() => handleResetPassword(u.id)}
+                      onClick={() => handleDeleteUser(u.id)}
                     >
-                      Reset hasła
+                      Usuń
                     </button>
                   </td>
                 </tr>

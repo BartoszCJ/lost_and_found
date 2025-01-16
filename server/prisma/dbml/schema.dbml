@@ -1,0 +1,97 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table items {
+  id Int [pk, increment]
+  name String [not null]
+  description String
+  category String [not null]
+  location_found String
+  date_found DateTime
+  status ItemStatus [not null, default: 'Znaleziony']
+  created_at DateTime [default: `now()`]
+  assigned_to Int
+  assignedTo users
+  lost_reports lost_reports [not null]
+  ownership_claims ownership_claims [not null]
+
+  Note: 'Przedmioty znalezione'
+}
+
+Table lost_reports {
+  id Int [pk, increment]
+  user_id Int [not null]
+  user users [not null]
+  item_id Int
+  item items
+  name String [not null, default: '']
+  description String [not null, default: '']
+  location_lost String [not null, default: '']
+  date_lost DateTime [default: `now()`, not null]
+  status ReportStatus [not null]
+  date_reported DateTime [default: `now()`, not null]
+
+  Note: 'Zgłoszenia zgubionych przedmiotów'
+}
+
+Table ownership_claims {
+  id Int [pk, increment]
+  item_id Int [not null]
+  user_id Int [not null]
+  description String [not null]
+  status ClaimStatus [not null, default: 'Oczekuje']
+  date_submitted DateTime [default: `now()`]
+  verified_by Int
+  item items [not null]
+  user users [not null]
+  verifiedBy users
+
+  Note: 'Zgłoszenia własności przedmiotów'
+}
+
+Table users {
+  id Int [pk, increment]
+  name String [not null]
+  email String [unique, not null]
+  password String [not null]
+  role String [not null]
+  created_at DateTime [default: `now()`]
+  lostReports lost_reports [not null]
+  claims ownership_claims [not null]
+  verifiedClaims ownership_claims [not null]
+  assignedItems items [not null]
+
+  Note: 'Użytkownicy systemu'
+}
+
+Enum ItemStatus {
+  Znaleziony
+  Przypisany
+  Zwrocony
+  Zarchiwizowany
+}
+
+Enum ReportStatus {
+  Oczekuje
+  Zaakceptowane
+  Odrzucone
+}
+
+Enum ClaimStatus {
+  Oczekuje
+  Zaakceptowane
+  Odrzucone
+}
+
+Ref: items.assigned_to > users.id
+
+Ref: lost_reports.user_id > users.id
+
+Ref: lost_reports.item_id > items.id
+
+Ref: ownership_claims.item_id > items.id [delete: Cascade]
+
+Ref: ownership_claims.user_id > users.id [delete: Cascade]
+
+Ref: ownership_claims.verified_by > users.id [delete: Cascade]

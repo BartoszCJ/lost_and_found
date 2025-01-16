@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 const EmployeeAddItem: React.FC = () => {
   const router = useRouter();
 
-  // Stan formularza
   const [formData, setFormData] = useState({
     name: "",
     description: "",

@@ -28,7 +28,6 @@ router.post(
   "/:id",
   authenticateJWT,
   authorizeRole(["employee", "admin"]),
-  updateOwnershipClaim
 );
 
 router.get("/user", authenticateJWT, getUserOwnershipClaims);
